@@ -7,10 +7,18 @@
 3. [Another paragraph](#paragraph2)
 
 ## GitHub repository link
-[javaspringboot on GitHub](https://github.com/albertesa/javaspringboot)
+[demoshopcart on GitHub](https://github.com/albertesa/demoshopcart)
 
 ## Security and support for SSL/TLS
 Yet not implemented, shopping carts are supported only anonymously
+
+## Angular application running in development
+
+Angular CLI must be installed.
+
+    cd demo-shopping-cart-prj
+    npm install
+    ng serve
 
 ## Environment Setup
     export MONGO_USER=<user_name>
@@ -19,6 +27,7 @@ Yet not implemented, shopping carts are supported only anonymously
     export MONGO_HOST=<db_host>
 
 ## Useful commands
+    cd jsbexample 
     mvn clean install -Pdev
     mvn spring-boot:run -Dspring-boot.run.profiles=dev
     mvn clean package -Pprod -Dmaven.test.skip=true

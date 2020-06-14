@@ -1,4 +1,4 @@
 <article class="cart">
-  <button class="resetCartButton" (click)="resetCart()">Reset Cart</button>
+  <button mat-raised-button class="resetCartButton" color="accent" (click)="resetCart()">Reset Cart</button>
   <app-cart-item *ngFor="let cartItem of cart.items" [cartItem]="cartItem"></app-cart-item>
 </article>

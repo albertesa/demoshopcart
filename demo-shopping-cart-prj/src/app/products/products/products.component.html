@@ -1,6 +1,9 @@
 <div class="selectProductsPanel">
-  <h1>Select products</h1>
-  <div>Clickproduct to add to cart</div>
+  <dir class="productsPanelTitle">
+    <h1>Select products</h1>
+    <div>Clickproduct to add to cart</div>
+  </dir>
 
   <app-product *ngFor="let prod of products" [product]="prod"></app-product>
 </div>
+
