@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import albertesa.sample.prj.config.AppConfig;
 import albertesa.sample.prj.controllers.ProductRequestParam;
 import albertesa.sample.prj.repositories.IRepository;
+import albertesa.sample.prj.util.AssertUtil;
 import albertesa.sample.prj.util.UUIDUtil;
 
 @Service
@@ -52,6 +53,7 @@ public class ProductService {
 
 	public Product setProduct(ProductRequestParam newProd) throws Exception {
 		String prodId = newProd.getId();
+		AssertUtil.assertValidRequestId(prodId);
 		if ("new".equalsIgnoreCase(prodId)) {
 			prodId = UUIDUtil.generateUUID();
 		}

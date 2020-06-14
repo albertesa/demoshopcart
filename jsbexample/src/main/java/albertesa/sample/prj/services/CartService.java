@@ -12,12 +12,14 @@ import org.bson.Document;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import albertesa.sample.prj.config.AppConfig;
 import albertesa.sample.prj.controllers.CartItemRequestParam;
 import albertesa.sample.prj.repositories.IRepository;
+import albertesa.sample.prj.util.AssertUtil;
 import albertesa.sample.prj.util.UUIDUtil;
 
 @Service
@@ -63,6 +65,7 @@ public class CartService {
 	 * @throws Exception 
 	 */
 	public Cart setCartItem(String cartId, CartItem newItem) throws Exception {
+		AssertUtil.assertValidRequestId(cartId);
 		Cart cart;
 		if ("new".equalsIgnoreCase(cartId)) {
 			cartId = UUIDUtil.generateUUID();
