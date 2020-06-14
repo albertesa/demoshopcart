@@ -1,9 +1,14 @@
-<div class="selectProductsPanel">
+<mat-card class="selectProductsPanel"
+  fxLayout="column"
+  fxFlexAlign="center center"
+  fxLayoutGap="10px"
+  fxFlex.xs="100%" fxFlex="600px">
   <dir class="productsPanelTitle">
     <h1>Select products</h1>
-    <div>Clickproduct to add to cart</div>
+    <mat-card>Click product to add to cart</mat-card>
   </dir>
 
   <app-product *ngFor="let prod of products" [product]="prod"></app-product>
-</div>
+</mat-card>
+
 

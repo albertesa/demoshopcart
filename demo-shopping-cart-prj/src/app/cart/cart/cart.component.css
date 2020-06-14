@@ -1,9 +1,10 @@
 .cart {
-  border: 1px solid blue;
+  width: 50%;
   padding: 10px;
   margin: 10px;
 }
 
 .resetCartButton {
   margin: 10px;
+  width: 100px;
 }

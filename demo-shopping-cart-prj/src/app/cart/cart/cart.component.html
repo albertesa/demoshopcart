@@ -1,4 +1,11 @@
-<article class="cart">
-  <button mat-raised-button class="resetCartButton" color="accent" (click)="resetCart()">Reset Cart</button>
+<mat-card class="cart"
+  fxLayout="column"
+  fxFlexAlign="center center"
+  fxLayoutGap="10px"
+  fxFlex.xs="100%" fxFlex="600px">
+  <h1>Card</h1>
+  <button mat-raised-button class="resetCartButton" color="accent"
+  (click)="resetCart()" [disabled]="cart.items.length==0">Reset Card</button>
+  <mat-card *ngIf="cart.items.length==0"> The card is empty</mat-card>
   <app-cart-item *ngFor="let cartItem of cart.items" [cartItem]="cartItem"></app-cart-item>
-</article>
+</mat-card>
