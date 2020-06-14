@@ -6,11 +6,20 @@ import { CartItem } from './../cart/cart-item/cart-item.model';
 import { Product } from '../products/product.model';
 import { throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { DeleteResponse } from './delete-response.model';
 
 @Injectable({providedIn: 'root'})
 export class RepositoryService {
 
   constructor(private http: HttpClient) {}
+
+  deleteCard(cartId: string) {
+    return this.http
+      .post<DeleteResponse>(`http://localhost:8080/cart/${cartId}/deletecart`, {})
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   setCartItem(cartId: string, cartItem: CartItem) {
     return this.http

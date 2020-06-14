@@ -2,11 +2,11 @@
   fxLayout="column"
   fxFlexAlign="center center"
   fxLayoutGap="10px"
-  fxFlex.xs="100%" fxFlex="600px">
-  <dir class="productsPanelTitle">
+  fxFlex.xs="100%" fxFlex="800px">
+  <div class="productsPanelTitle monsFont">
     <h1>Select products</h1>
     <mat-card>Click product to add to cart</mat-card>
-  </dir>
+  </div>
 
   <app-product *ngFor="let prod of products" [product]="prod"></app-product>
 </mat-card>

@@ -1,3 +1,9 @@
-<article class="product" (click)="onClick()">
-  <div>{{ product.id }} - {{ product.productName }} - {{ product.productDesc }} - {{ product.productImg }}</div>
-</article>
+<div class="product" fxLayout="row" fxFlexAlign="center center" fxLayoutGap="10px"
+  fxFlex.xs="100%" fxFlex="100%">
+  <div class="monsFont" fxFlex.xs="100%" fxFlex="200px">{{ product.productName }}</div>
+  <div class="monsFont" fxFlex.xs="100%" fxFlex="200px">{{ product.productImg }}</div>
+  <div class="monsFont" fxFlex.xs="100%" fxFlex="200px">{{ product.productImg }}</div>
+  <div class="monsFont" fxFlex.xs="100%" fxFlex="200px">
+    <mat-icon aria-hidden="false" aria-label="Add item to cart" (click)="onClick()">add_shopping_cart</mat-icon>
+  </div>
+</div>

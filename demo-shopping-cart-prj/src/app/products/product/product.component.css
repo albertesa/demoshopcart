@@ -1,14 +1,13 @@
 .product {
-  border: 1px solid darkgreen;
   padding: 10px;
   margin: 10px;
 }
 
-.example-container {
-  height: 400px;
-  overflow: auto;
+.monsFont {
+  font-family: 'Montserrat';font-size: 22px;
 }
 
-table {
-  width: 100%;
+mat-icon {
+  padding: 2px;
+  cursor: pointer;
 }

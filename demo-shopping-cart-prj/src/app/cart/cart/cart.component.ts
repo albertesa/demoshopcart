@@ -46,6 +46,9 @@ export class CartComponent implements OnInit {
 
   resetCart(): void {
     console.log('Resetting cart ...');
+    this.repo.deleteCard(this.cart.id).subscribe(dr => {
+      console.log('Response of delete card request', JSON.stringify(dr));
+    });
     localStorage.removeItem('cartId');
     this.cart = new Cart('new');
   }
