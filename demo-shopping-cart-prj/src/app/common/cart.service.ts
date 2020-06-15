@@ -8,14 +8,20 @@ import { CartItem } from '../cart/cart-item/cart-item.model';
 export class CartService {
 
   addCartItemEvent: EventEmitter<CartItem> = new EventEmitter<CartItem>();
+  updateCartItemEvent: EventEmitter<CartItem> = new EventEmitter<CartItem>();
 
   constructor() {}
 
   addProductToCart(prod: Product) {
-    console.log('prod', prod);
+    console.log('Add prod to cart', prod);
     let ci = new CartItem(prod.id, prod.productName, prod.productImg, 1);
-    console.log('ci', ci);
+    console.log('Add prod ci to cart', ci);
     this.addCartItemEvent.emit(ci);
+  }
+
+  updateItemInCart(newCartItem: CartItem) {
+    console.log('Update cart item in cart', newCartItem);
+    this.updateCartItemEvent.emit(newCartItem);
   }
 
 }

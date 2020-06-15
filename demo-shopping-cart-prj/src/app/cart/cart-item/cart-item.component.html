@@ -6,8 +6,11 @@
   <div class="monsFont" fxFlex.xs="100%" fxFlex="200px">{{ cartItem.productImg }}</div>
   <div class="monsFont" fxFlex.xs="100%" fxFlex="200px">{{ cartItem.numOfItems }}</div>
   <div class="monsFont" fxFlex.xs="100%" fxFlex="200px">
-    <mat-icon aria-hidden="false" aria-label="Add one more to cart">add_circle_outline</mat-icon>
-    <mat-icon aria-hidden="false" aria-label="Remove one item from cart">remove_circle_outline</mat-icon>
-    <mat-icon aria-hidden="false" aria-label="Remove item from cart">remove_shopping_cart</mat-icon>
+    <mat-icon aria-hidden="false" aria-label="Add one more to cart"
+      (click)="updateCartItem(cartItem.numOfItems + 1)">add_circle_outline</mat-icon>
+    <mat-icon aria-hidden="false" aria-label="Remove one item from cart"
+      (click)="updateCartItem(cartItem.numOfItems - 1)">remove_circle_outline</mat-icon>
+    <mat-icon aria-hidden="false" aria-label="Remove item from cart"
+      (click)="updateCartItem(0)">remove_shopping_cart</mat-icon>
   </div>
 </div>
