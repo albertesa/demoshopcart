@@ -1,12 +1,40 @@
-.productsPanelTitle {
-  width: 300px;
-  padding: 10px;
-  margin: 10px;
-}
-
-.selectProductsPanel {
+.cart {
   width: 50%;
   padding: 10px;
   margin: 10px;
 }
 
+.resetCartButton {
+  margin-top: 10px;
+  width: 100px;
+}
+
+.monsFont {
+  font-family: 'Montserrat';
+  font-size: 22px;
+}
+
+.matCardTitleH1 {
+  font-size: 2em;
+  font-weight: bolder;
+}
+
+.matCardTitleH2 {
+  font-size: 1.5em;
+  font-weight: bolder;
+}
+
+.matCardTitle {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.matCardTitleDiv {
+  margin-top: 10px;
+}
+
+/deep/ .mat-card-header-text {
+  width: 100%;
+  /*text-align: center;*/
+}

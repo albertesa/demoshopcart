@@ -16,8 +16,14 @@ export class ProductsComponent implements OnInit {
   constructor(private repo: RepositoryService) { }
 
   ngOnInit(): void {
+    this.fetchProducts();
+  }
+
+  fetchProducts() {
+    console.log('Fetching products');
     this.repo.fetchProducts().subscribe(prods => {
-      this.products = prods;
+      console.log('Fetched products', prods.length);
+      this.products = prods.slice();
     });
   }
 

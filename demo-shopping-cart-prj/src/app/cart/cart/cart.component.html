@@ -1,11 +1,17 @@
-<mat-card class="cart monsFont"
-  fxLayout="column"
-  fxFlexAlign="center center"
-  fxLayoutGap="10px"
-  fxFlex.xs="100%" fxFlex="800px">
-  <h1><mat-icon aria-hidden="true" style="padding: 10px;">shopping_cart</mat-icon>Cart</h1>
-  <button mat-raised-button class="resetCartButton" color="accent"
-  (click)="resetCart()" [disabled]="cart.items.length==0">Reset Cart</button>
-  <mat-card *ngIf="cart.items.length==0"> The card is empty</mat-card>
-  <app-cart-item *ngFor="let cartItem of cart.items" [cartItem]="cartItem"></app-cart-item>
+<mat-card class="cart monsFont" fxLayout="column" fxFlexAlign="center center" fxLayoutGap="10px" fxFlex.xs="100%"
+  fxFlex="800px">
+  <mat-card-header>
+    <mat-card-title class="matCardTitle">
+      <div class="matCardTitleDiv">
+        <span class="monsFont matCardTitleH2">Cart</span>
+        <mat-icon aria-hidden="true" style="padding-left: 10px;">shopping_cart</mat-icon>
+      </div>
+      <button mat-raised-button class="resetCartButton" color="accent" (click)="resetCart()"
+        [disabled]="cart.items.length==0">Reset Cart</button>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-card *ngIf="cart.items.length==0"> The card is empty</mat-card>
+    <app-cart-item *ngFor="let cartItem of cart.items" [cartItem]="cartItem"></app-cart-item>
+  </mat-card-content>
 </mat-card>

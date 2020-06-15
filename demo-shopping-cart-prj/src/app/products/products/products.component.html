@@ -1,13 +1,18 @@
-<mat-card class="selectProductsPanel"
-  fxLayout="column"
-  fxFlexAlign="center center"
-  fxLayoutGap="10px"
-  fxFlex.xs="100%" fxFlex="800px">
-  <div class="productsPanelTitle monsFont">
-    <h1>Select products</h1>
-  </div>
-
-  <app-product *ngFor="let prod of products" [product]="prod"></app-product>
+<mat-card class="cart monsFont" fxLayout="column" fxFlexAlign="center center" fxLayoutGap="10px" fxFlex.xs="100%"
+  fxFlex="800px">
+  <mat-card-header>
+    <mat-card-title class="matCardTitle">
+      <div class="matCardTitleDiv">
+        <span class="monsFont matCardTitleH2">Products</span>
+        <mat-icon aria-hidden="true" style="padding-left: 10px;">list</mat-icon>
+      </div>
+      <button mat-raised-button class="resetCartButton" color="accent"
+        (click)="fetchProducts()">Refresh</button>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-card *ngIf="products.length===0">No products found, click <b>Refresh</b> to reload</mat-card>
+    <app-product *ngFor="let prod of products" [product]="prod"></app-product>
+  </mat-card-content>
 </mat-card>
-
 
