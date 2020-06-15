@@ -1,5 +1,7 @@
 package albertesa.sample.prj.controllers;
 
+import albertesa.sample.prj.util.SanitizerUtil;
+
 public class CartItemRequestParam {
 	
 	private String productId;
@@ -16,7 +18,7 @@ public class CartItemRequestParam {
 	}
 
 	public void setProductId(String productId) {
-		this.productId = productId;
+		this.productId = SanitizerUtil.sanitize(productId);
 	}
 
 	public String getProductName() {
@@ -24,7 +26,7 @@ public class CartItemRequestParam {
 	}
 
 	public void setProductName(String productName) {
-		this.productName = productName;
+		this.productName = SanitizerUtil.sanitize(productName);
 	}
 
 	public String getProductImg() {
@@ -32,7 +34,7 @@ public class CartItemRequestParam {
 	}
 
 	public void setProductImg(String productImg) {
-		this.productImg = productImg;
+		this.productImg = SanitizerUtil.sanitize(productImg);
 	}
 
 	public int getNumOfItems() {
