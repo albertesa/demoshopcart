@@ -10,7 +10,8 @@
 [demoshopcart on GitHub](https://github.com/albertesa/demoshopcart)
 
 ## Security and support for SSL/TLS
-Yet not implemented, shopping carts are supported only anonymously
+[OWASP](https://owasp.org/) [java-html-sanitizer](https://github.com/OWASP/java-html-sanitizer) is used to sanitize input.
+Authentication not implemented yet, shopping carts are supported only anonymously
 
 ## Angular application running in development
 
