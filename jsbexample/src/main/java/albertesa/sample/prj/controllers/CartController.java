@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -34,7 +36,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/cart")
 @Tag(name = "CartController", description = "Cart CRUD API")
-@CrossOrigin
+//@CrossOrigin(origins = "http://localhost:4200")
 public class CartController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CartController.class);
@@ -81,7 +83,9 @@ public class CartController {
     		@PathVariable String cartId,
     		@Parameter(description="CartItem to add/update. CartItem will be updated by Product ID. Cannot be null or empty.", 
             required=true, schema=@Schema(implementation = Void.class))
-    		@Valid @RequestBody CartItemRequestParam cartItem) throws Exception {
+    		@Valid @RequestBody CartItemRequestParam cartItem,
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception {
 		Cart cart = cartService.addCartItem(cartId, cartItem);
 		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
@@ -90,14 +94,19 @@ public class CartController {
 			produces = "application/json")
     public ResponseEntity<Cart> removeItem(
     		@PathVariable String cartId,
-    		@RequestBody CartItemRequestParam rmItem) throws Exception {
+    		@RequestBody CartItemRequestParam rmItem,
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception {
 		Cart cart = cartService.removeCartItem(cartId, rmItem);
 		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{cartId}/deletecart", method = RequestMethod.POST,
 			produces = "application/json")
-    public ResponseEntity<DeleteDocResponse> deleteCart(@PathVariable String cartId) throws JsonProcessingException {
+    public ResponseEntity<DeleteDocResponse> deleteCart(
+    		@PathVariable String cartId,
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws JsonProcessingException {
 		long numOfDeleted = cartService.deleteCart(cartId);
 		return new ResponseEntity<DeleteDocResponse>(new DeleteDocResponse(cartId, numOfDeleted), HttpStatus.OK);
 	}

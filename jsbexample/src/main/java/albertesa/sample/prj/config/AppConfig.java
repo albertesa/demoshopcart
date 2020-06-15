@@ -4,7 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableConfigurationProperties
@@ -18,7 +24,7 @@ public class AppConfig {
 	private String cartCollName = "";
 	private String prodCollName = "";
 	private String connectionStr = "";
-	
+
 	@Autowired
 	public AppConfig() {
 		super();
@@ -89,5 +95,20 @@ public class AppConfig {
 
 	public String getResolvedConnectionString() {
 		return String.format(connectionStr, uname, password, host, db);
-	} 
+	}
+
+	@Bean
+	public FilterRegistrationBean<CorsFilter> processCorsFilter() {
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		final CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		config.addAllowedOrigin("http://localhost:4200");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		source.registerCorsConfiguration("/**", config);
+		CorsFilter filter = new CorsFilter(source);
+		final FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(filter);
+		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+		return bean;
+	}
 }

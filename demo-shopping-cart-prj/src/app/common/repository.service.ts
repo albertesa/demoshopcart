@@ -15,7 +15,7 @@ export class RepositoryService {
 
   deleteCard(cartId: string) {
     return this.http
-      .post<DeleteResponse>(`http://localhost:8080/cart/${cartId}/deletecart`, {})
+      .post<DeleteResponse>(`http://localhost:8080/cart/${cartId}/deletecart`, {withCredentials: true})
       .pipe(
         catchError(this.handleError)
       );
@@ -23,7 +23,7 @@ export class RepositoryService {
 
   setCartItem(cartId: string, cartItem: CartItem) {
     return this.http
-      .post<Cart>(`http://localhost:8080/cart/${cartId}/additem`, cartItem)
+      .post<Cart>(`http://localhost:8080/cart/${cartId}/additem`, cartItem, {withCredentials: true})
       .pipe(
         catchError(this.handleError)
       );
@@ -39,7 +39,7 @@ export class RepositoryService {
 
   fetchProducts() {
     return this.http
-      .get<Product[]>('http://localhost:8080/product/list')
+      .get<Product[]>('http://localhost:8080/product/list', {withCredentials: true})
       .pipe(
         catchError(this.handleError)
       );

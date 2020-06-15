@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/product")
 @Tag(name = "ProductController", description = "Product CRUD API")
-@CrossOrigin
+//@CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -46,7 +49,9 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Collection<Product>> getProducts() throws Exception {
+    public ResponseEntity<Collection<Product>> getProducts(
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception {
 		Collection<Product> prods = productService.getProducts();
 		return new ResponseEntity<Collection<Product>>(prods, HttpStatus.OK);
 	}
@@ -70,14 +75,19 @@ public class ProductController {
     public ResponseEntity<Product> setProduct(
     		@Parameter(description="Product to add/update. Product will be updated by Product ID. Cannot be null or empty.", 
             required=true, schema=@Schema(implementation = Void.class))
-    		@RequestBody ProductRequestParam prodParam) throws Exception {
+    		@RequestBody ProductRequestParam prodParam,
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws Exception {
 		Product prod = productService.setProduct(prodParam);
 		return new ResponseEntity<Product>(prod, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{prodId}/deleteprod", method = RequestMethod.POST,
 			produces = "application/json")
-    public ResponseEntity<DeleteDocResponse> deleteProduct(@PathVariable String prodId) throws JsonProcessingException {
+    public ResponseEntity<DeleteDocResponse> deleteProduct(
+    		@PathVariable String prodId,
+    		HttpServletRequest request,
+    		HttpServletResponse response) throws JsonProcessingException {
 		long numOfDeleted = productService.deleteProduct(prodId);
 		return new ResponseEntity<DeleteDocResponse>(new DeleteDocResponse(prodId, numOfDeleted), HttpStatus.OK);
 	}
