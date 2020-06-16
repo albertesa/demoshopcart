@@ -10,7 +10,10 @@
 [demoshopcart on GitHub](https://github.com/albertesa/demoshopcart)
 
 ## Security and support for SSL/TLS
-[OWASP](https://owasp.org/) [java-html-sanitizer](https://github.com/OWASP/java-html-sanitizer) is used to sanitize input.
+To prevent **XSS** attacks [OWASP](https://owasp.org/) [java-html-sanitizer](https://github.com/OWASP/java-html-sanitizer) and **Angular** built in feature of interpolating HTML tags are used to sanitize input and values on client .
+
+To prevent **CSRF (XSRF)** attacks uses built in **Angular** and **Spring Boot** support for **XSRF-TOKEN** cookie and **CORS** requests
+
 Authentication not implemented yet, shopping carts are supported only anonymously
 
 ## Angular application running in development
@@ -41,6 +44,9 @@ The **Cart** and **CartItem** objects are immutable and can be updated only by t
 ## Response Exceptions Handler Component
 
 **albertesa.sample.prj.controllers.RestResponseEntityExceptionHandler**
+
+## **FLEX Layout** used in UI to create responsive UIs
+**FLEX Layout** used in UI to create responsive UIs
 
 ### List of **REST** API Endpoints
 
