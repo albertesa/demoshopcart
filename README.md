@@ -1,28 +1,25 @@
 # Simple Java Spring project featuring a Shopping Cart functionality 
 
-# Table of contents
-1. [Introduction](#introduction)
-2. [Some paragraph](#paragraph1)
-    1. [Sub paragraph](#subparagraph1)
-3. [Another paragraph](#paragraph2)
-
 ## GitHub repository link
-[demoshopcart on GitHub](https://github.com/albertesa/demoshopcart)
+**[demoshopcart on GitHub](https://github.com/albertesa/demoshopcart)**
 
 ## Security and support for SSL/TLS
-To prevent **XSS** attacks [OWASP](https://owasp.org/) [java-html-sanitizer](https://github.com/OWASP/java-html-sanitizer) and **Angular** built in feature of interpolating HTML tags are used to sanitize input and values on client .
+To prevent **XSS** attacks [OWASP](https://owasp.org/) [java-html-sanitizer](https://github.com/OWASP/java-html-sanitizer) and **Angular** built in feature of interpolating HTML tags are used to sanitize input and output values on client.
 
-To prevent **CSRF (XSRF)** attacks uses built in **Angular** and **Spring Boot** support for **XSRF-TOKEN** cookie and **CORS** requests
+To prevent the **CSRF (XSRF)** attacks, the application uses built in **Angular** and **Spring Boot** features to support exchange of the **XSRF-TOKEN** cookie and **CORS** requests.
 
-Authentication not implemented yet, shopping carts are supported only anonymously
+No authentication is implemented yet, as a consequence shopping carts are supported only anonymously.
 
-## Angular application running in development
+HTTPS protocol (with SSL/TLS) is not supported yet.
 
-Angular CLI must be installed.
+## How to run the Angular application in development
+
+NodeJs and Angular CLI must be installed.
 
     cd demo-shopping-cart-prj
     npm install
     ng serve
+    ng build --prod
 
 ## Environment Setup
     export MONGO_USER=<user_name>
@@ -34,21 +31,21 @@ Angular CLI must be installed.
     cd jsbexample 
     mvn clean install -Pdev
     mvn spring-boot:run -Dspring-boot.run.profiles=dev
-    mvn clean package -Pprod -Dmaven.test.skip=true
+    mvn clean package -Pprod
     java -Dspring.profiles.active=prod -jar target/sample.project-0.0.1-SNAPSHOT.jar
-    mvn javadoc:javadoc
+    mvn javadoc:javadoc - to generate Java API documentation
     
 ## Cart and cart items are immutable objects
-The **Cart** and **CartItem** objects are immutable and can be updated only by the **CartService** instance.
+The **Cart** and **CartItem** objects are immutable and can be created/updated only by the **CartService** instance.
 
 ## Response Exceptions Handler Component
 
 **albertesa.sample.prj.controllers.RestResponseEntityExceptionHandler**
 
-## **FLEX Layout** used in UI to create responsive UIs
-**FLEX Layout** used in UI to create responsive UIs
+## **FLEX Layout** is used in UI to support responsive UIs
+**FLEX Layout** is used in UI to support responsive UIs.
 
-### List of **REST** API Endpoints
+### List of some useful **REST** API Endpoints
 
 ##### Swagger UI
 
@@ -58,14 +55,7 @@ The **Cart** and **CartItem** objects are immutable and can be updated only by t
     curl --location --request GET 'http://localhost:8080/actuator/info'
 
 ##### List all carts
-    curl --location --request POST 'http://localhost:8080/cart/222222/additem' \
-      --header 'Content-Type: application/json' \
-      --data-raw '{
-          "productId": "prod2",
-          "productName": "kettle",
-          "productImg": "kettle.jpg",
-          "numOfItems": 5
-    }'
+    curl --location --request GET 'http://localhost:8080/cart/list' --data-raw ''
 
 ##### Get a cart by **id**
     curl --location --request GET 'http://localhost:8080/cart/222222'
