@@ -40,7 +40,8 @@ public class MongoDbClientWrapper {
 					CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 			database = mongoClient.getDatabase(appCfg.getDb()).withCodecRegistry(pojoCodecRegistry);
 		} catch (Exception e) {
-			throw e;
+			System.out.println(e.getMessage());
+			//throw e;
 		}
     }
 	

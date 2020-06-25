@@ -8,6 +8,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -23,11 +25,22 @@ public class AppConfig {
 	private String db = "";
 	private String cartCollName = "";
 	private String prodCollName = "";
+	private String usersCollName = "";
 	private String connectionStr = "";
+	private String jwtSecret;
 
 	@Autowired
 	public AppConfig() {
 		super();
+	}
+
+	public String getJwtSecret() {
+		return jwtSecret;
+	}
+
+	@Value("#{environment.JWT_SECRET}")
+	public void setJwtSecret(String jwtSecret) {
+		this.jwtSecret = jwtSecret;
 	}
 
 	public String getUname() {
@@ -84,6 +97,15 @@ public class AppConfig {
 		this.prodCollName = prodCollName;
 	}
 
+	public String getUsersCollName() {
+		return usersCollName;
+	}
+
+	@Value("${mongo.tables.users}")
+	public void setUsersCollName(String usersCollName) {
+		this.usersCollName = usersCollName;
+	}
+
 	public String getConnectionStr() {
 		return connectionStr;
 	}
@@ -110,5 +132,10 @@ public class AppConfig {
 		final FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(filter);
 		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
 		return bean;
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }
