@@ -26,6 +26,10 @@ NodeJs and Angular CLI must be installed.
     export MONGO_PWD=<user_password>
     export MONGO_DB=<db_name>
     export MONGO_HOST=<db_host>
+    export JWT_SECRET=<JWT_secret>
+    export REDIS_HOST=<redis_host_name>
+    export REDIS_PASSWD=<redis_password>
+    export REDIS_PORT=<redis_port_int>
 
 ## Useful commands
     cd jsbexample 
