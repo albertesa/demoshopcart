@@ -2,3 +2,59 @@
   margin: 20px;
 }
 
+.monsFont {
+  font-family: 'Montserrat';
+  font-size: 22px;
+}
+
+.matCardTitleH1 {
+  font-size: 2em;
+  font-weight: bolder;
+}
+
+.matCardTitleH2 {
+  font-size: 1.5em;
+  font-weight: bolder;
+}
+
+.main-div{
+  /*height: 100vh;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+a:hover, a:active{
+  color: lightgray;
+}
+
+mat-toolbar{
+  border-radius: 3px;
+}
+
+@media(max-width: 959px){
+  mat-toolbar{
+      border-radius: 0px;
+  }
+}
+ .activeRouterLink {
+  color: lightgray;
+ }
+
+.like-card {
+  margin: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  padding-bottom: 20px;
+  border-radius: 5px;
+}
+

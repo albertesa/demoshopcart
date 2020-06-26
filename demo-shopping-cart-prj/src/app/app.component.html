@@ -1,11 +1,37 @@
-<mat-card class="appMainContainer"
-  fxLayout="column"
-  fxFlexAlign="center center"
-  fxLayoutGap="10px"
-  fxFlex.xs="100%" fxFlex="850px">
-  <app-products></app-products>
+<div class="main-div">
+<div class="main-div like-card"
+fxLayout="column"
+fxFlexAlign="center center"
+fxLayoutGap="10px"
+fxFlex.xs="100%" fxFlex="850px">
 
-  <app-cart></app-cart>
-
-  <router-outlet></router-outlet>
-</mat-card>
+<mat-toolbar color="primary">
+  <div class="matCardTitleDiv">
+    <span class="monsFont matCardTitleH1">Demo Shopping Cart</span>
+  </div>
+  <span class="example-spacer"></span>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon matTooltip="Home page">
+      <a routerLink="/" routerLinkActive="activeRouterLink"
+      [routerLinkActiveOptions]="{exact: true}">home</a>
+    </mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon matTooltip="Go to shopping cart">
+      <a routerLink="/prodscart" routerLinkActive="activeRouterLink">shopping_cart</a>
+    </mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon matTooltip="Log in">
+      <a routerLink="/login" routerLinkActive="activeRouterLink">login</a>
+    </mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon matTooltip="Sign up">
+      <a routerLink="/signup" routerLinkActive="activeRouterLink">person_add_alt_1</a>
+    </mat-icon>
+  </button>
+</mat-toolbar>
+<router-outlet></router-outlet>
+</div>
+</div>

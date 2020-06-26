@@ -1,0 +1,46 @@
+mat-form-field {
+  width: 300px;
+}
+
+.resetCartButton {
+  margin-top: 10px;
+  width: 100px;
+}
+
+.monsFont {
+  font-family: 'Montserrat';
+  font-size: 22px;
+}
+
+.matCardTitleH1 {
+  font-size: 2em;
+  font-weight: bolder;
+}
+
+.matCardTitleH2 {
+  font-size: 1.5em;
+  font-weight: bolder;
+}
+
+.matCardTitle {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.matCardTitleDiv {
+  margin-top: 10px;
+}
+
+/deep/ .mat-card-header-text {
+  width: 100%;
+  /*text-align: center;*/
+}
+
+.main-div{
+  /*height: 100vh;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

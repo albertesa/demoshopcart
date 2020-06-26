@@ -1,0 +1,23 @@
+<mat-card class="cart monsFont" fxLayout="column" fxFlexAlign="center center" fxLayoutGap="10px" fxFlex.xs="100%"
+  fxFlex="400px">
+  <mat-card-header>
+    <mat-card-title class="matCardTitle">
+      <div class="matCardTitleDiv">
+        <span class="monsFont matCardTitleH2">Signup</span>
+        <mat-icon aria-hidden="true" style="padding-left: 10px;">person_add_alt_1</mat-icon>
+      </div>
+      <button mat-raised-button class="resetCartButton" color="primary"
+        (click)="submitSignup()">Submit</button>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+      <mat-form-field>
+        <input type="text" matInput placeholder="Desired user name">
+      </mat-form-field>
+      <mat-form-field>
+        <input type="password" matInput placeholder="Secure password">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -15,6 +15,10 @@ import { CartItemComponent } from './cart/cart-item/cart-item.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { MatDividerModule } from '@angular/material/divider';
+import { SignupComponent } from './auth/signup/signup.component';
+import { LoginComponent } from './auth/login/login.component';
+import { WelcomeComponent } from './welcome/welcome/welcome.component';
+import { ProductsCartComponent } from './products-cart/products-cart/products-cart.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +26,11 @@ import { MatDividerModule } from '@angular/material/divider';
     ProductsComponent,
     ProductComponent,
     CartComponent,
-    CartItemComponent
+    CartItemComponent,
+    SignupComponent,
+    LoginComponent,
+    WelcomeComponent,
+    ProductsCartComponent
   ],
   imports: [
     BrowserModule,
