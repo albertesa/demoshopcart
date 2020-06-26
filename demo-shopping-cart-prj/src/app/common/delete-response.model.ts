@@ -1,3 +1,4 @@
-export class DeleteResponse {
-  constructor(docId: string, numOfDeleted: number) {}
+export interface DeleteResponse {
+  docId: string;
+  numOfDeleted: number;
 }
