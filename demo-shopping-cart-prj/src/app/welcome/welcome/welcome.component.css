@@ -44,3 +44,6 @@ mat-form-field {
   align-items: center;
 }
 
+.img {
+  border-radius: 5px 5px 5px 5px;
+}

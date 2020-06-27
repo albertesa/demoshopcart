@@ -16,17 +16,22 @@ fxFlex.xs="100%" fxFlex="850px">
       [routerLinkActiveOptions]="{exact: true}">home</a>
     </mat-icon>
   </button>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+  <button *ngIf="isAuthenticated" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
     <mat-icon matTooltip="Go to shopping cart">
       <a routerLink="/prodscart" routerLinkActive="activeRouterLink">shopping_cart</a>
     </mat-icon>
   </button>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+  <button *ngIf="!isAuthenticated" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
     <mat-icon matTooltip="Log in">
       <a routerLink="/login" routerLinkActive="activeRouterLink">login</a>
     </mat-icon>
   </button>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+  <button *ngIf="isAuthenticated" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon matTooltip="Log out">
+      <a (click)="logout()">keyboard_backspace</a>
+    </mat-icon>
+  </button>
+  <button *ngIf="!isAuthenticated" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
     <mat-icon matTooltip="Sign up">
       <a routerLink="/signup" routerLinkActive="activeRouterLink">person_add_alt_1</a>
     </mat-icon>

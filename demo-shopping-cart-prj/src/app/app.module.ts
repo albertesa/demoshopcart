@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -21,6 +21,7 @@ import { WelcomeComponent } from './welcome/welcome/welcome.component';
 import { ProductsCartComponent } from './products-cart/products-cart/products-cart.component';
 import { ConfigService } from './common/app-config.service';
 import { AppConfig } from './common/app-config.model';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,13 @@ import { AppConfig } from './common/app-config.model';
       useFactory: initApp,
       multi: true,
       deps: [HttpClient, ConfigService]
-    }],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
