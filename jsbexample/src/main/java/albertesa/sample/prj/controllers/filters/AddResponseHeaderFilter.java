@@ -22,6 +22,7 @@ import albertesa.sample.prj.util.UUIDUtil;
 public class AddResponseHeaderFilter implements Filter {
 	
 	final static String XSRF_COOKIE_NAME = "XSRF-TOKEN";
+	final static String XSRF_HEADER_NAME = "X-XSRF-TOKEN";
 	
 	private static final Logger logger = LoggerFactory.getLogger(AddResponseHeaderFilter.class);
  
@@ -29,9 +30,10 @@ public class AddResponseHeaderFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, 
       FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String xsrfHeaderValue = httpServletRequest.getHeader(XSRF_HEADER_NAME);
         Optional<Cookie> optXsrfTokenCookie = findXsrfTokenCookie(httpServletRequest.getCookies());
         if (optXsrfTokenCookie.isPresent()) {
-        	validateXsrfTokenCookie(optXsrfTokenCookie.get());
+        	validateXsrfTokenCookie(optXsrfTokenCookie.get(), xsrfHeaderValue);
         }
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         if (optXsrfTokenCookie.isPresent()) {
@@ -50,8 +52,12 @@ public class AddResponseHeaderFilter implements Filter {
 		return c;
 	}
 
-	private void validateXsrfTokenCookie(Cookie cookie) throws IllegalArgumentException {
-		logger.info("Validation pending for cookie: {}, {}", cookie.getName(), cookie.getValue());		
+	private void validateXsrfTokenCookie(Cookie cookie, String xsrfHeaderValue) throws IllegalArgumentException {
+		logger.info("trans tokens {}, {}", cookie.getValue(), xsrfHeaderValue);
+		if (xsrfHeaderValue == null || (!cookie.getValue().equals(xsrfHeaderValue))) {
+			logger.error("Transaction tokens do not match");
+			throw new IllegalArgumentException("Invalid transaction token");
+		}
 	}
 
 	private Optional<Cookie> findXsrfTokenCookie(Cookie[] cookies) {
@@ -60,7 +66,7 @@ public class AddResponseHeaderFilter implements Filter {
 		}
 		for (int i = 0; i < cookies.length; i ++) {
 			Cookie c = cookies[i];
-			if (c.getName().equalsIgnoreCase("XSRF-TOKEN")) {
+			if (c.getName().equalsIgnoreCase(XSRF_COOKIE_NAME)) {
 				return Optional.of(c);
 			}
 		}
