@@ -17,4 +17,8 @@ export class ConfigService {
     this.appConfigLoaded.next({ ...this.appConfig });
   }
 
+  getServer(): string {
+    return this.appConfig.server;
+  }
+
 }

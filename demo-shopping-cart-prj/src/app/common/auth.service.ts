@@ -4,13 +4,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Subject, throwError, ReplaySubject } from 'rxjs';
-import { AppConfig } from './app-config.model';
 import { ConfigService } from './app-config.service';
 import { AuthEventModel } from './../auth/auth-event.model';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  appConfig: AppConfig;
   authEvents: ReplaySubject<AuthEventModel> = new ReplaySubject<AuthEventModel>(1);
   private token: string;
   private username: string;
@@ -59,8 +57,9 @@ export class AuthService {
   }
 
   login(uname: string, passwd: string) {
+    let server: string = this.cfgSvc.getServer();
     this.http
-      .post<{token: string}>(`http://localhost:8080/login`,
+      .post<{token: string}>(`${server}/login`,
       {username: uname, password: passwd},
       {withCredentials: true})
       .pipe(

@@ -1,21 +1,30 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
+
 
 import { Cart } from './../cart/cart/cart.model';
 import { CartItem } from './../cart/cart-item/cart-item.model';
 import { Product } from '../products/product.model';
-import { throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
 import { DeleteResponse } from './delete-response.model';
+import { ConfigService } from './app-config.service';
+
 
 @Injectable({providedIn: 'root'})
 export class RepositoryService {
 
-  constructor(private http: HttpClient) {}
+  private server: string;
+
+  constructor(
+    private http: HttpClient,
+    private cfgSvc: ConfigService) {
+      this.server = this.cfgSvc.getServer();
+    }
 
   deleteCard(cartId: string) {
     return this.http
-      .post<DeleteResponse>(`http://localhost:8080/cart/${cartId}/deletecart`, {withCredentials: true})
+      .post<DeleteResponse>(`${this.server}/cart/${cartId}/deletecart`, {withCredentials: true})
       .pipe(
         catchError(this.handleError)
       );
@@ -23,7 +32,7 @@ export class RepositoryService {
 
   setCartItem(cartId: string, cartItem: CartItem) {
     return this.http
-      .post<Cart>(`http://localhost:8080/cart/${cartId}/additem`, cartItem, {withCredentials: true})
+      .post<Cart>(`${this.server}/cart/${cartId}/additem`, cartItem, {withCredentials: true})
       .pipe(
         catchError(this.handleError)
       );
@@ -31,7 +40,7 @@ export class RepositoryService {
 
   fetchCart(cartId: string) {
     return this.http
-      .get<Cart>(`http://localhost:8080/cart/${cartId}`)
+      .get<Cart>(`${this.server}/cart/${cartId}`)
       .pipe(
         catchError(this.handleError)
       );
@@ -39,7 +48,7 @@ export class RepositoryService {
 
   fetchProducts() {
     return this.http
-      .get<Product[]>('http://localhost:8080/product/list', {withCredentials: true})
+      .get<Product[]>(`${this.server}/product/list`, {withCredentials: true})
       .pipe(
         catchError(this.handleError)
       );
