@@ -45,20 +45,20 @@ public class JwtAuthenticationController {
 	                content = @Content(schema = @Schema(implementation = User.class)))})
 	@RequestMapping(value = "/login", method = RequestMethod.POST,
 			produces = "application/json")
-	public ResponseEntity<?> login(
+	public ResponseEntity<JwtResponse> login(
 			@Parameter(description="Username and password", 
             required=true, schema=@Schema(implementation = Void.class))
 			@RequestBody JwtRequest authenticationRequest) throws Exception {
 
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-		final String token = jwtTokenUtil.generateToken(authenticationRequest.getUsername());
+		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+		final String token = jwtTokenUtil.generateToken(authenticationRequest.getEmail());
 
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
-	private void authenticate(String username, String password) throws Exception {
+	private void authenticate(String email, String password) throws Exception {
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 		} catch (DisabledException e) {
 			throw new Exception("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {
@@ -67,17 +67,18 @@ public class JwtAuthenticationController {
 	}
 
 	@Operation(summary = "SignUp user and persist.",
-			description = "Signup a new user by username and password.",
+			description = "Signup a new user by email and password.",
 			tags = { "UserController" })
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "successful operation",
 	                content = @Content(schema = @Schema(implementation = JwtRequest.class)))})
 	@RequestMapping(value = "/signup", method = RequestMethod.POST,
 			produces = "application/json")
-	public ResponseEntity<?> signup(
-			@Parameter(description="Username and password", 
+	public ResponseEntity<SignupResponse> signup(
+			@Parameter(description="EMail and password", 
             required=true, schema=@Schema(implementation = Void.class))
 			@RequestBody JwtRequest user) throws Exception {
-		return ResponseEntity.ok(userDetailsService.save(user));
+		User userCreated = userDetailsService.save(user);
+		return ResponseEntity.ok(SignupResponse.ok(userCreated.getId()));
 	}
 }

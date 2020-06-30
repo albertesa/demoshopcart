@@ -12,13 +12,15 @@
     <form fxLayout="column" fxLayoutAlign="center center"
       fxLayoutGap="10px" #f="ngForm" (ngSubmit)="onSubmit(f)">
       <mat-form-field>
-        <input type="text" matInput placeholder="Your user name" ngModel name="uname">
+        <input type="text" matInput placeholder="Your registered email"
+        ngModel name="email" email required>
       </mat-form-field>
       <mat-form-field>
-        <input type="password" matInput placeholder="Your password" ngModel name="passwd">
+        <input type="password" matInput placeholder="Your password" ngModel name="passwd" required>
       </mat-form-field>
 
-      <button type="submit" mat-raised-button class="resetCartButton" color="primary" >Submit</button>
+      <button type="submit" mat-raised-button class="resetCartButton"
+        [disabled]="f.invalid" color="primary">Submit</button>
     </form>
   </mat-card-content>
 </mat-card>

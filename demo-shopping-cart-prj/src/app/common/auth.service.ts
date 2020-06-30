@@ -6,18 +6,19 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Subject, throwError, ReplaySubject } from 'rxjs';
 import { ConfigService } from './app-config.service';
 import { AuthEventModel } from './../auth/auth-event.model';
+import { SignupResponseModel } from './../auth/signup/signup-response.model';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
   authEvents: ReplaySubject<AuthEventModel> = new ReplaySubject<AuthEventModel>(1);
   private token: string;
-  private username: string;
+  private email: string;
 
   constructor(
     private cfgSvc: ConfigService,
     private http: HttpClient,
     private router: Router) {
-    this.username = localStorage.getItem('user');
+    this.email = localStorage.getItem('user');
     this.token = localStorage.getItem('token');
     if (this.isAuthenticated()) {
       this.notifyAuthenticated();
@@ -37,7 +38,7 @@ export class AuthService {
   }
 
   getUserName(): string {
-    return this.username;
+    return this.email;
   }
 
   isAuthenticated(): boolean {
@@ -50,34 +51,36 @@ export class AuthService {
   logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    this.username = null;
+    this.email = null;
     this.token = null;
     this.notifyNotAuthenticated('logout_event');
     this.router.navigate(['/']);
   }
 
-  login(uname: string, passwd: string) {
+  login(email: string, passwd: string) {
     let server: string = this.cfgSvc.getServer();
     this.http
       .post<{token: string}>(`${server}/login`,
-      {username: uname, password: passwd},
+      {email: email, password: passwd},
       {withCredentials: true})
       .pipe(
         catchError(
           err => {
-            this.handleError(err);
+            let errMsg: string = this.handleError(err);
+            this.notifyNotAuthenticated(errMsg);
             return throwError('Something bad happened; please try again later.');
           })
       ).subscribe(t => {
-        this.username = uname;
+        this.email = email;
         this.token = t.token;
         console.log('login response', t);
-        localStorage.setItem('user', this.username);
+        localStorage.setItem('user', this.email);
         localStorage.setItem('token', this.token);
         this.notifyAuthenticated();
       });
   }
-  private handleError(error: HttpErrorResponse) {
+  private handleError(error: HttpErrorResponse): string {
+    console.log('error', JSON.stringify(error));
     let errMsg: string = '';
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
@@ -95,8 +98,31 @@ export class AuthService {
         `Backend returned code ${error.status}, ` +
         `body was: ${JSON.stringify(errMsg)}`);
     }
-    console.log('login error', errMsg);
-    this.notifyNotAuthenticated(errMsg);
+    console.log('post error', errMsg);
+    return errMsg;
   };
+
+  signup(email: string, passwd: string): Promise<SignupResponseModel> {
+    let server: string = this.cfgSvc.getServer();
+    return new Promise<SignupResponseModel>((resolve, reject) => {
+        this.http
+        .post<SignupResponseModel>(`${server}/signup`,
+        {email: email, password: passwd},
+        {withCredentials: true})
+        .subscribe((sr: SignupResponseModel) => {
+          console.log('Auth svc signup response', JSON.stringify(sr));
+          if (sr.status !== 'success') {
+            reject(sr);
+            return;
+          }
+          resolve(sr);
+        },
+        err => {
+          let errMsg = this.handleError(err);
+          console.error('Auth svc signup error', errMsg);
+          reject(new SignupResponseModel(email, errMsg));
+        });
+    });
+  }
 
 }

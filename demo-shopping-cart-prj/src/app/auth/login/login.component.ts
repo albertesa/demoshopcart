@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onSubmit(form: NgForm) {
     console.log('form submitted', form);
-    this.authSvc.login(form.value.uname, form.value.passwd);
+    this.authSvc.login(form.value.email, form.value.passwd);
     this.authEventsSubscription = this.authSvc.authEvents.subscribe(
       t => {
         this.processAuthEvent(t);

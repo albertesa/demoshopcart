@@ -9,15 +9,24 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
-      <mat-form-field>
-        <input type="text" matInput placeholder="Desired user name">
+    <form fxLayout="column" fxLayoutAlign="center center"
+    fxLayoutGap="10px" #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <mat-form-field hintLabel="Valid email address.">
+        <input type="text" matInput placeholder="Your email"
+        name="email" required ngModel #emailInp="ngModel" email>
+        <mat-error *ngIf="emailInp.hasError('required')">Email must not be empty.</mat-error>
+        <mat-error *ngIf="!emailInp.hasError('required')">Must be a valid email address.</mat-error>
       </mat-form-field>
-      <mat-form-field>
-        <input type="password" matInput placeholder="Secure password">
+      <mat-form-field hintLabel="Should be at least 6 characters long.">
+        <input type="password" matInput placeholder="Secure password" ngModel
+          name="passwd"
+          required minlength="6" #pwdInput="ngModel">
+        <mat-hint align="end">{{ pwdInput.value?.length }} / 6</mat-hint>
+        <mat-error>Must be at least 6 characters long.</mat-error>
       </mat-form-field>
-      <button mat-raised-button class="resetCartButton" color="primary"
-        (click)="submitSignup()">Submit</button>
+      <button type="submit" mat-raised-button class="resetCartButton"
+        [disabled]="f.invalid"
+        color="primary">Submit</button>
     </form>
   </mat-card-content>
 </mat-card>

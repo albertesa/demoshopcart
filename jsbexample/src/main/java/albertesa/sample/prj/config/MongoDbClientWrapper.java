@@ -7,6 +7,8 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ import com.mongodb.client.MongoDatabase;
 
 @Component
 public class MongoDbClientWrapper {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MongoDbClientWrapper.class);
 
 	private MongoClientURI uri;
 	private MongoClient mongoClient;
@@ -40,8 +44,8 @@ public class MongoDbClientWrapper {
 					CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 			database = mongoClient.getDatabase(appCfg.getDb()).withCodecRegistry(pojoCodecRegistry);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			//throw e;
+			logger.error(e.getMessage(), e);
+			throw e;
 		}
     }
 	

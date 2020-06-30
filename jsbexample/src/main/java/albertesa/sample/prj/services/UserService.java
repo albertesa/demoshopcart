@@ -54,16 +54,16 @@ public class UserService {
 	
 	/**
 	 * Get user from cache or DB
-	 * @param userName name of the user to retrieve
+	 * @param email email of the user to retrieve
 	 * @return Optional with user or empty
 	 * @throws Exception if an exception occurs during retrieval from cache or DB
 	 */
-	public Optional<User> getUser(String userName) throws Exception {
-		Optional<User> optUsr = getCachedUser(userName);
+	public Optional<User> getUser(String email) throws Exception {
+		Optional<User> optUsr = getCachedUser(email);
 		if (optUsr.isPresent()) {
 			return optUsr;
 		}
-		Optional<JsonNode> optJn = repo.getDocument(tableName, userName);
+		Optional<JsonNode> optJn = repo.getDocument(tableName, email);
 		if (optJn.isPresent()) {
 			User user = unmarshall(optJn.get());
 			setCachedUser(user);
@@ -102,10 +102,10 @@ public class UserService {
 		return new User(uname, pwdEncoded, prefsMap);
 	}
 
-	public User addUser(String userName, String encryptedPwd) throws JsonProcessingException {
-		User user = new User(userName, encryptedPwd);
-		user.setPreference("pref1", "val1");
-		user.setPreference("pref2", "val2");
+	public User addUser(String email, String encryptedPwd) throws JsonProcessingException {
+		User user = new User(email, encryptedPwd);
+		//user.setPreference("pref1", "val1");
+		//user.setPreference("pref2", "val2");
 		repo.saveDocument(tableName, user, User.class);
 		setCachedUser(user);
 		return user;

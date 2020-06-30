@@ -28,9 +28,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		try {
-			Optional<User> optUsr = userSvc.getUser(username);
+			Optional<User> optUsr = userSvc.getUser(email);
 			if (optUsr.isEmpty()) {
 				throw new UsernameNotFoundException("User not found");
 			}
@@ -41,7 +41,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	}
 
 	public User save(JwtRequest user) throws JsonProcessingException {
-		return userSvc.addUser(user.getUsername(), bcryptEncoder.encode(user.getPassword()));
+		return userSvc.addUser(user.getEmail(), bcryptEncoder.encode(user.getPassword()));
 	}
 
 }
