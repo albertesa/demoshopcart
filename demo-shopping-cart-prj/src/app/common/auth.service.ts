@@ -54,6 +54,7 @@ export class AuthService {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     this.cookieSvc.delete('SSBA-STOK');
+    this.cookieSvc.delete('SSBA-CHECK');
     this.email = null;
     this.token = null;
     this.notifyNotAuthenticated('logout_event');

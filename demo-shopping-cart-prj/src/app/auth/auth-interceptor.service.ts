@@ -28,6 +28,7 @@ export class AuthInterceptorService implements HttpInterceptor {
       hdrs['Authorization-User'] = this.authSvc.getUserName();
     }
     let modifiedReq: HttpRequest<any> = req.clone({
+      withCredentials: true,
       setHeaders: hdrs
     });
     console.log('Modified headers 1', JSON.stringify(modifiedReq.headers));

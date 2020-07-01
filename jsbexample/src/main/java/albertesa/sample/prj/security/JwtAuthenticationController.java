@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import albertesa.sample.prj.config.AppConfig;
 import albertesa.sample.prj.services.UserService.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,14 +30,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 //@CrossOrigin
 public class JwtAuthenticationController {
 
-	@Autowired
 	private AuthenticationManager authenticationManager;
-
-	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	private AppConfig appCfg;
+	private JwtUserDetailsService userDetailsService;
 
 	@Autowired
-	private JwtUserDetailsService userDetailsService;
+	public JwtAuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil,
+			AppConfig appCfg, JwtUserDetailsService userDetailsService) {
+		super();
+		this.authenticationManager = authenticationManager;
+		this.jwtTokenUtil = jwtTokenUtil;
+		this.appCfg = appCfg;
+		this.userDetailsService = userDetailsService;
+	}
 
 	@Operation(summary = "Login user",
 			description = "Login user by username and password.",
@@ -54,7 +61,7 @@ public class JwtAuthenticationController {
 
 		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 		final String token = jwtTokenUtil.generateToken(authenticationRequest.getEmail());
-		CookieUtil.addXsrfCookie(authenticationRequest.getEmail(), response);
+		CookieUtil.addXsrfCookie(appCfg, authenticationRequest.getEmail(), response);
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
