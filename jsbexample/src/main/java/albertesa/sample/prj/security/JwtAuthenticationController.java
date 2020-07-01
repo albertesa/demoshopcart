@@ -1,14 +1,15 @@
 package albertesa.sample.prj.security;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,17 +49,19 @@ public class JwtAuthenticationController {
 	public ResponseEntity<JwtResponse> login(
 			@Parameter(description="Username and password", 
             required=true, schema=@Schema(implementation = Void.class))
-			@RequestBody JwtRequest authenticationRequest) throws Exception {
+			@RequestBody JwtRequest authenticationRequest,
+			HttpServletResponse response) throws Exception {
 
 		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 		final String token = jwtTokenUtil.generateToken(authenticationRequest.getEmail());
-
+		CookieUtil.addXsrfCookie(authenticationRequest.getEmail(), response);
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
 	private void authenticate(String email, String password) throws Exception {
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+			Authentication authTok = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+			SecurityContextHolder.getContext().setAuthentication(authTok);
 		} catch (DisabledException e) {
 			throw new Exception("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {

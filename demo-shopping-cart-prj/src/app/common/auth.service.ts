@@ -1,3 +1,4 @@
+import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -17,7 +18,8 @@ export class AuthService {
   constructor(
     private cfgSvc: ConfigService,
     private http: HttpClient,
-    private router: Router) {
+    private router: Router,
+    private cookieSvc: CookieService) {
     this.email = localStorage.getItem('user');
     this.token = localStorage.getItem('token');
     if (this.isAuthenticated()) {
@@ -51,6 +53,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    this.cookieSvc.delete('SSBA-STOK');
     this.email = null;
     this.token = null;
     this.notifyNotAuthenticated('logout_event');

@@ -18,10 +18,10 @@ export class AuthInterceptorService implements HttpInterceptor {
     let hdrs = {
       'Content-Type': 'application/json',
     };
-    let xsrfCv = this.cookieSvc.get('XSRF-TOKEN');
+    let xsrfCv = this.cookieSvc.get('SSBA-STOK');
     console.log('Adding xsrf header', xsrfCv);
     if (xsrfCv && xsrfCv.length > 0) {
-      hdrs['X-XSRF-TOKEN'] = xsrfCv;
+      hdrs['H-SSBA-STOK'] = xsrfCv;
     }
     if (this.authSvc.isAuthenticated()) {
       hdrs['Authorization'] = 'Bearer ' + this.authSvc.getToken();
