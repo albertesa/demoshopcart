@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NG_VALIDATORS } from '@angular/forms';
 
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -22,6 +22,7 @@ import { ProductsCartComponent } from './products-cart/products-cart/products-ca
 import { ConfigService } from './common/app-config.service';
 import { AppConfig } from './common/app-config.model';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { ExtendedEmailValidatorDirective } from './common/extended-email.directive';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     SignupComponent,
     LoginComponent,
     WelcomeComponent,
-    ProductsCartComponent
+    ProductsCartComponent,
+    ExtendedEmailValidatorDirective
   ],
   imports: [
     BrowserModule,

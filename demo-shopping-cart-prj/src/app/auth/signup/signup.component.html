@@ -13,7 +13,8 @@
     fxLayoutGap="10px" #f="ngForm" (ngSubmit)="onSubmit(f)">
       <mat-form-field hintLabel="Valid email address.">
         <input type="text" matInput placeholder="Your email"
-        name="email" required ngModel #emailInp="ngModel" email>
+        name="email" required ngModel #emailInp="ngModel"
+        validEmail>
         <mat-error *ngIf="emailInp.hasError('required')">Email must not be empty.</mat-error>
         <mat-error *ngIf="!emailInp.hasError('required')">Must be a valid email address.</mat-error>
       </mat-form-field>
