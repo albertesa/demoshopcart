@@ -37,7 +37,7 @@ public class AddResponseHeaderFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		String reqUri = httpServletRequest.getRequestURI();
 		logger.info("Process XSRF token for {}", reqUri);
-		if (!reqUri.equals("/login")) {
+		if (!reqUri.equals("/login") && !reqUri.equals("/signup")) {
 			CookieUtil.verifyXsrfCookie(appCfg, httpServletRequest, httpServletResponse);
 		}
 		chain.doFilter(request, response);

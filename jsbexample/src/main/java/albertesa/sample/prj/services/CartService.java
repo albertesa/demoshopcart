@@ -5,34 +5,43 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.bson.Document;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import albertesa.sample.prj.config.AppConfig;
 import albertesa.sample.prj.controllers.CartItemRequestParam;
 import albertesa.sample.prj.repositories.IRepository;
+import albertesa.sample.prj.services.eventbus.CreateCart;
 import albertesa.sample.prj.util.AssertUtil;
-import albertesa.sample.prj.util.UUIDUtil;
 
 @Service
 public class CartService {
 
 	private IRepository repo;
 	private String tableName;
+	private EventBus eventBus;
 
 	@Autowired
-	public CartService(IRepository mongoRep, AppConfig appCfg) {
+	public CartService(IRepository mongoRep, AppConfig appCfg, EventBus eventBus) {
 		super();
 		this.repo = mongoRep;
 		this.tableName = appCfg.getCartCollName();
+		this.eventBus = eventBus;
+		this.eventBus.register(this);
+	}
+	
+	@Subscribe
+	public void onCreateCart(CreateCart event) {
+		generateCart(event.getUserId(), event.getCartId(), Optional.empty());
 	}
 
 	public Collection<Cart> getCarts() throws Exception {
@@ -52,7 +61,21 @@ public class CartService {
 		return Optional.of(unmarshallCartJson(jNode.get()));
 	}
 
-	public long deleteCart(String cartId) {
+	private Cart generateCart(String userId, String cartId, Optional<CartItem> optNewItem) {
+		Cart cart = new Cart(userId, cartId);
+		if (optNewItem.isPresent()) {
+			cart.setCartItem(optNewItem.get());
+		}
+		repo.saveDocument(tableName, cart, Cart.class);
+		return cart;
+	}
+
+	public long resetCart(String userId, String cartId) {
+		Cart newCart = new Cart(userId, cartId);
+		return repo.replaceDocument(tableName, newCart.getId(), newCart, Cart.class);
+	}
+
+	public long deleteCart(String userId, String cartId) {
 		long numOfDeleted = repo.deleteDocument(tableName, cartId, Cart.class);
 		return numOfDeleted;
 	}
@@ -60,39 +83,29 @@ public class CartService {
 	/**
 	 * Cart item with 0 number of items will be removed from the cart
 	 * @param cartId
+	 * @param cid 
 	 * @param newItem
 	 * @return new or updated existing cart
 	 * @throws Exception 
 	 */
-	public Cart setCartItem(String cartId, CartItem newItem) throws Exception {
+	public Cart setCartItem(String userId, String cartId, CartItem newItem) throws Exception {
 		AssertUtil.assertValidRequestId(cartId);
-		Cart cart;
-		if ("new".equalsIgnoreCase(cartId)) {
-			cartId = UUIDUtil.generateUUID();
-		}
 		Optional<Cart> existingCartOpt = getCart(cartId);
 		if (existingCartOpt.isEmpty()) {
-			if (newItem.getNumOfItems() == 0) {
-				return new Cart(cartId);
-			}
-			return generateCart(cartId, newItem);
+			throw new IllegalArgumentException(String.format("Cart does not exist", cartId));
 		}
-		cart = existingCartOpt.get();
+		Cart cart = existingCartOpt.get();
 		return updateExistingCart(cart, newItem);
 	}
 
 	private Cart updateExistingCart(Cart cart, CartItem newItem) {
+		final String loggedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+		if (!cart.getUserId().equals(loggedUser)) {
+			throw new IllegalArgumentException(String.format("Invalid cart transaction"));
+		}
 		Cart newCart = generateUpdatedCart(cart, newItem);
 		repo.replaceDocument(tableName, newCart.getId(), newCart, Cart.class);
 		return newCart;
-	}
-
-	private Cart generateCart(String cartId, CartItem newItem) {
-		Cart cart;
-		cart = new Cart(cartId);
-		cart.setCartItem(newItem);
-		repo.saveDocument(tableName, cart, Cart.class);
-		return cart;
 	}
 
 	/**
@@ -104,15 +117,16 @@ public class CartService {
 	 * @see {@link Cart#setCartItem(CartItem)}
 	 */
 	private Cart generateUpdatedCart(Cart cart, CartItem newItem) {
-		Cart newCart = new Cart(cart.getId());
+		Cart newCart = new Cart(cart.getUserId(), cart.getId());
 		Collection<CartItem> items = cart.getItems();
 		items.forEach(i -> newCart.setCartItem(i));
 		newCart.setCartItem(newItem);
 		return newCart;
 	}
 
-	public Cart addCartItem(String cid, CartItemRequestParam cartItem) throws Exception {
+	public Cart addCartItem(String cid, CartItemRequestParam cartItem, String userId) throws Exception {
 		Cart existingCart = this.setCartItem(
+				userId,
 				cid,
 				new CartItem(
 						cartItem.getProductId(),
@@ -129,8 +143,9 @@ public class CartService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Cart removeCartItem(String cid, CartItemRequestParam cartItem) throws Exception {
+	public Cart removeCartItem(String userId, String cid, CartItemRequestParam cartItem) throws Exception {
 		Cart existingCart = this.setCartItem(
+				userId,
 				cid,
 				new CartItem(
 						cartItem.getProductId(),
@@ -141,7 +156,7 @@ public class CartService {
 	}
 
 	public static Cart unmarshallCartJson(JsonNode n) {
-		Cart cart = new Cart(n.get("_id").asText());
+		Cart cart = new Cart(n.get("userId").asText(), n.get("_id").asText());
 		JsonNode items = n.get("items");
 		if (items.isArray()) {
 			items.iterator().forEachRemaining(jn -> {
@@ -156,7 +171,7 @@ public class CartService {
 	}
 
 	public static Cart unmarshallCart(Document doc) {
-		Cart cart = new Cart(doc.getString("_id"));
+		Cart cart = new Cart(doc.getString("userId"), doc.getString("_id"));
 		Object o = doc.get("items");
 		if (o instanceof ArrayList) {
 			ArrayList<?> items = ArrayList.class.cast(o);
@@ -174,15 +189,21 @@ public class CartService {
 
 	public static class Cart {
 		private String id;
+		private String userId;
 		private Map<String, CartItem> mapItems = new HashMap<>();
 
-		private Cart(String id) {
+		private Cart(String userId, String id) {
 			super();
+			this.userId = userId;
 			this.id = id;
 		}
 
 		public String getId() {
 			return id;
+		}
+
+		public String getUserId() {
+			return userId;
 		}
 
 		@BsonIgnore

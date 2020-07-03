@@ -21,6 +21,10 @@ public class JwtUserDetails implements UserDetails {
 		return null;
 	}
 
+	public String getCartId() {
+		return user.getCartId();
+	}
+
 	@Override
 	public String getPassword() {
 		return user.getPassword();

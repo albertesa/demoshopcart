@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import albertesa.sample.prj.security.CookieUtil;
 
@@ -15,14 +16,16 @@ public class CookieUtilTest {
 	@Test
 	public void generateCheckValueTest() {
 		String id = "111@222.333";
-		String idr = id.replace("@", "%^&").replace(".", "!@#");
 		String uuid = UUIDUtil.generateUUID();
-		String uuidr = uuid.replace("-", "_@$%^&*)+(@_");
-		System.out.println(uuidr);
 		String sk = "JwtSecretKey";
-		String cv = CookieUtil.generateCheckValue(idr, uuidr, sk);
-		System.out.println(String.format("%s.%s", uuid, cv));
+		String cv1 = CookieUtil.generateCheckValue(id, uuid, sk);
+		System.out.println(cv1);
+		assertThat(cv1).isEqualTo(CookieUtil.generateCheckValue(id, uuid, sk));
+		uuid = UUIDUtil.generateUUID();
 		sk = "AnotherSecretKey";
-		System.out.println(CookieUtil.generateCheckValue(id, uuid, sk));
+		String cv2 = CookieUtil.generateCheckValue(id, uuid, sk);
+		System.out.println(cv2);
+		assertThat(cv2).isEqualTo(CookieUtil.generateCheckValue(id, uuid, sk));
+		assertThat(cv1).isNotEqualTo(cv2);
 	}
 }

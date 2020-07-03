@@ -1,3 +1,4 @@
+import { UpdateResponse } from './update-response.model';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { throwError } from 'rxjs';
@@ -7,7 +8,6 @@ import { catchError, retry } from 'rxjs/operators';
 import { Cart } from './../cart/cart/cart.model';
 import { CartItem } from './../cart/cart-item/cart-item.model';
 import { Product } from '../products/product.model';
-import { DeleteResponse } from './delete-response.model';
 import { ConfigService } from './app-config.service';
 
 
@@ -22,9 +22,9 @@ export class RepositoryService {
       this.server = this.cfgSvc.getServer();
     }
 
-  deleteCard(cartId: string) {
+  resetCart(cartId: string) {
     return this.http
-      .post<DeleteResponse>(`${this.server}/cart/${cartId}/deletecart`, {})
+      .post<UpdateResponse>(`${this.server}/cart/${cartId}/resetcart`, {})
       .pipe(
         catchError(this.handleError)
       );

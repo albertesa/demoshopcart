@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 
 import albertesa.sample.prj.config.MongoDbClientWrapper;
 
@@ -87,10 +88,11 @@ public class MongoRepository implements IRepository {
 	}
 
 	@Override
-	public <T> void replaceDocument(String collName, String id, T obj, Class<T> clazz) {
+	public <T> long replaceDocument(String collName, String id, T obj, Class<T> clazz) {
 		try {
 			MongoCollection<T> collection = client.getCollection(collName, clazz);
-			collection.replaceOne(eq("_id", id), obj);
+			UpdateResult res = collection.replaceOne(eq("_id", id), obj);
+			return res.getModifiedCount();
 		} catch (Exception e) {
 			throw e;
 		}		

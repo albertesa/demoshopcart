@@ -58,17 +58,18 @@ public class JwtAuthenticationController {
             required=true, schema=@Schema(implementation = Void.class))
 			@RequestBody JwtRequest authenticationRequest,
 			HttpServletResponse response) throws Exception {
-
-		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+		Authentication authTok = authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 		final String token = jwtTokenUtil.generateToken(authenticationRequest.getEmail());
-		CookieUtil.addXsrfCookie(appCfg, authenticationRequest.getEmail(), response);
+		CookieUtil.addXsrfCookie(appCfg, response, authTok);
+		CookieUtil.addCartCookie(response, authTok);
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
-	private void authenticate(String email, String password) throws Exception {
+	private Authentication authenticate(String email, String password) throws Exception {
 		try {
 			Authentication authTok = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 			SecurityContextHolder.getContext().setAuthentication(authTok);
+			return authTok;
 		} catch (DisabledException e) {
 			throw new Exception("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {

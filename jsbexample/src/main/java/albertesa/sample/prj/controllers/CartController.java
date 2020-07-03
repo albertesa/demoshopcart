@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,7 +85,8 @@ public class CartController {
     		@Valid @RequestBody CartItemRequestParam cartItem,
     		HttpServletRequest request,
     		HttpServletResponse response) throws Exception {
-		Cart cart = cartService.addCartItem(cartId, cartItem);
+		final String requestUserHeader = request.getHeader("Authorization-User");
+		Cart cart = cartService.addCartItem(cartId, cartItem, requestUserHeader);
 		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
 
@@ -97,18 +97,20 @@ public class CartController {
     		@RequestBody CartItemRequestParam rmItem,
     		HttpServletRequest request,
     		HttpServletResponse response) throws Exception {
-		Cart cart = cartService.removeCartItem(cartId, rmItem);
+		final String requestUserHeader = request.getHeader("Authorization-User");
+		Cart cart = cartService.removeCartItem(requestUserHeader, cartId, rmItem);
 		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{cartId}/deletecart", method = RequestMethod.POST,
+	@RequestMapping(value = "/{cartId}/resetcart", method = RequestMethod.POST,
 			produces = "application/json")
-    public ResponseEntity<DeleteDocResponse> deleteCart(
+    public ResponseEntity<UpdateDocResponse> resetCart(
     		@PathVariable String cartId,
     		HttpServletRequest request,
     		HttpServletResponse response) throws JsonProcessingException {
-		long numOfDeleted = cartService.deleteCart(cartId);
-		return new ResponseEntity<DeleteDocResponse>(new DeleteDocResponse(cartId, numOfDeleted), HttpStatus.OK);
+		final String requestUserHeader = request.getHeader("Authorization-User");
+		long numOfDeleted = cartService.resetCart(requestUserHeader, cartId);
+		return new ResponseEntity<UpdateDocResponse>(new UpdateDocResponse(cartId, numOfDeleted), HttpStatus.OK);
 	}
     
 }

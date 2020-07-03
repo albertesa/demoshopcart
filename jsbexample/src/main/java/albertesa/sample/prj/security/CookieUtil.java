@@ -1,7 +1,6 @@
 package albertesa.sample.prj.security;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 
 import javax.servlet.http.Cookie;
@@ -10,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
 import albertesa.sample.prj.config.AppConfig;
 import albertesa.sample.prj.util.UUIDUtil;
@@ -21,10 +21,13 @@ public class CookieUtil {
 	final static String XSRF_HEADER_NAME = "H-SSBA-STOK";
 	final static String XSRF_COOKIE_NAME = "SSBA-STOK";
 	final static String XSRF_CHECK_COOKIE_NAME = "SSBA-CHECK";
+	final static String CART_ID_COOKIE_NAME = "SSBA-CART";
 	
 	private static final Logger logger = LoggerFactory.getLogger(CookieUtil.class);
 
-	public static void addXsrfCookie(AppConfig appCfg, String email, HttpServletResponse response) {
+	public static void addXsrfCookie(AppConfig appCfg, HttpServletResponse response, Authentication authTok) {
+		JwtUserDetails usrDetails = JwtUserDetails.class.cast(authTok.getPrincipal());
+		String email = usrDetails.getUsername();
 		String uuid = UUIDUtil.generateUUID();
 		String check = generateCheckValue(email, uuid, appCfg.getJwtSecret());
 		Cookie c = generateXsrfTokenCookie(XSRF_COOKIE_NAME, uuid);
@@ -80,8 +83,14 @@ public class CookieUtil {
 	public static String generateCheckValue(String id, String val, String secret) {
 		String idr = id.replace("@", "%^&").replace(".", "!@#");
 		String valr = val.replace("-", "_@$%^&*)+(@_");
-		return Jwts.builder().setSubject(valr).setAudience(idr)
+		return Jwts.builder().setSubject(String.format("%s|%s", valr, idr))
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
+	}
+
+	public static void addCartCookie(HttpServletResponse response, Authentication authTok) {
+		JwtUserDetails usrDetails = JwtUserDetails.class.cast(authTok.getPrincipal());
+		Cookie c = generateXsrfTokenCookie(CART_ID_COOKIE_NAME, usrDetails.getCartId());
+		response.addCookie(c);		
 	}
 
 }

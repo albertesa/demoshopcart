@@ -23,6 +23,10 @@ export class AppComponent {
 
   }
 
+  logoutTooltip(): string {
+    return `Log out (${this.authSvc.getUserName()})`;
+  }
+
   logout() {
     this.authSvc.logout();
   }

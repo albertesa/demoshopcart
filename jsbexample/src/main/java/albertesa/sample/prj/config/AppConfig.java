@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.google.common.eventbus.EventBus;
 
 @Configuration
 @EnableConfigurationProperties
@@ -109,5 +112,11 @@ public class AppConfig {
 
 	public String getResolvedConnectionString() {
 		return String.format(connectionStr, uname, password, host, db);
+	}
+	
+	@Bean
+	public EventBus getEventBus() {
+		EventBus eb = new EventBus();
+		return eb;
 	}
 }

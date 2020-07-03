@@ -27,7 +27,7 @@ fxFlex.xs="100%" fxFlex="850px">
     </mat-icon>
   </button>
   <button *ngIf="isAuthenticated" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-    <mat-icon matTooltip="Log out">
+    <mat-icon [matTooltip]="logoutTooltip()">
       <a (click)="logout()">power_settings_new</a>
     </mat-icon>
   </button>

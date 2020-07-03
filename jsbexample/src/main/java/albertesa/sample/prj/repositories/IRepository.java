@@ -55,7 +55,8 @@ public interface IRepository {
 	 * @param id <code>id</code> if the existing document to replace
 	 * @param doc object of type <code>T</code> to replace the existing one
 	 * @param clazz class parameter of type <code>T</code>
+	 * @return 
 	 */
-	<T> void replaceDocument(String collName, String id, T doc, Class<T> clazz);
+	<T> long replaceDocument(String collName, String id, T doc, Class<T> clazz);
 
 }

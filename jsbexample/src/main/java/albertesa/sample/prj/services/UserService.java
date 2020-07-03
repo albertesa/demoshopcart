@@ -14,9 +14,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.eventbus.EventBus;
 
 import albertesa.sample.prj.config.AppConfig;
 import albertesa.sample.prj.repositories.IRepository;
+import albertesa.sample.prj.services.eventbus.CreateCart;
+import albertesa.sample.prj.util.UUIDUtil;
 
 @Service
 public class UserService {
@@ -25,19 +28,23 @@ public class UserService {
 	private IRepository repo;
 	private ICacheService cacheSvc;
 	private ObjectMapper mapper;
+	private EventBus eventBus;
 
 	@Autowired
 	private UserService(IRepository mongoRepo,
 			AppConfig appCfg,
 			ICacheService cacheSvc,
-			ObjectMapper mapper) {
+			ObjectMapper mapper,
+			EventBus eventBus) {
 		super();
 		this.tableName = appCfg.getUsersCollName();
 		this.repo = mongoRepo;
 		this.cacheSvc = cacheSvc;
 		this.mapper = mapper;
+		this.eventBus = eventBus;
+		this.eventBus.register(this);
 	}
-	
+
 	/**
 	 * Retrieve cached user by <code>userName</code> from cache or DB.
 	 * @param userName user name
@@ -89,6 +96,7 @@ public class UserService {
 		}
 		String uname = n.get(idKey).asText();
 		String pwdEncoded = n.get("password").asText();
+		String cartId = n.get("cartId").asText();
 		JsonNode prefs = n.get("preferences");
 		Map<String, String> prefsMap = new HashMap<>();
 		if (prefs.isObject()) {
@@ -99,14 +107,15 @@ public class UserService {
 				prefsMap.put(jnNextEntry.getKey(), jnNextEntry.getValue().asText());
 			}
 		}
-		return new User(uname, pwdEncoded, prefsMap);
+		return new User(uname, pwdEncoded, cartId, prefsMap);
 	}
 
 	public User addUser(String email, String encryptedPwd) throws JsonProcessingException {
-		User user = new User(email, encryptedPwd);
-		//user.setPreference("pref1", "val1");
-		//user.setPreference("pref2", "val2");
+		String cartId = UUIDUtil.generateUUID();
+		User user = new User(email, encryptedPwd, cartId);
+		user.setPreference("pref1", "val1");
 		repo.saveDocument(tableName, user, User.class);
+		eventBus.post(new CreateCart(email, cartId));
 		setCachedUser(user);
 		return user;
 	}
@@ -115,17 +124,17 @@ public class UserService {
 		private String id;
 		private Map<String, String> preferences = new HashMap<>();
 		private String password;
+		private String cartId;
 		
-		private User(String id, String pwd) {
+		private User(String id, String pwd, String cartId) {
 			super();
 			this.id = id;
 			this.password = pwd;
+			this.cartId = cartId;
 		}
 		
-		private User(String id, String pwd, Map<String, String> preferences) {
-			super();
-			this.id = id;
-			this.password = pwd;
+		private User(String id, String pwd, String cartId, Map<String, String> preferences) {
+			this(id, pwd, cartId);
 			this.preferences = preferences;
 		}
 		
@@ -149,6 +158,10 @@ public class UserService {
 
 		public String getPassword() {
 			return password;
+		}
+		
+		public String getCartId() {
+			return this.cartId;
 		}
 
 		@Override
