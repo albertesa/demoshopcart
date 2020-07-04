@@ -1,4 +1,4 @@
-package albertesa.sample.prj.controllers.filters;
+package albertesa.sample.prj.security;
 
 import java.io.IOException;
 
@@ -16,16 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import albertesa.sample.prj.config.AppConfig;
-import albertesa.sample.prj.security.CookieUtil;
 
 @Component
-public class AddResponseHeaderFilter implements Filter {
+public class XsrfHeaderFilter implements Filter {
 
-	private static final Logger logger = LoggerFactory.getLogger(AddResponseHeaderFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(XsrfHeaderFilter.class);
 	private AppConfig appCfg;
 
 	@Autowired
-	public AddResponseHeaderFilter(AppConfig appCfg) {
+	public XsrfHeaderFilter(AppConfig appCfg) {
 		super();
 		this.appCfg = appCfg;
 	}
@@ -38,7 +37,7 @@ public class AddResponseHeaderFilter implements Filter {
 		String reqUri = httpServletRequest.getRequestURI();
 		logger.info("Process XSRF token for {}", reqUri);
 		if (!reqUri.equals("/login") && !reqUri.equals("/signup")) {
-			CookieUtil.verifyXsrfCookie(appCfg, httpServletRequest, httpServletResponse);
+			//CookieUtil.verifyXsrfCookie(appCfg, httpServletRequest, httpServletResponse);
 		}
 		chain.doFilter(request, response);
 	}

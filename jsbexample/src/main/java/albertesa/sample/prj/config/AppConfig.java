@@ -23,10 +23,20 @@ public class AppConfig {
 	private String usersCollName = "";
 	private String connectionStr = "";
 	private String jwtSecret;
+	private String imagesPath;
 
 	@Autowired
 	public AppConfig() {
 		super();
+	}
+
+	public String getImagesPath() {
+		return imagesPath;
+	}
+
+	@Value("${images.upload.folder}")
+	public void setImagesPath(String imagesPath) {
+		this.imagesPath = imagesPath;
 	}
 
 	public String getJwtSecret() {
