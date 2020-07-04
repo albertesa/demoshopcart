@@ -21,6 +21,11 @@ fxFlex.xs="100%" fxFlex="850px">
       <a routerLink="/prodscart" routerLinkActive="activeRouterLink">shopping_cart</a>
     </mat-icon>
   </button>
+  <button *ngIf="isAuthenticated" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon matTooltip="Add new product">
+      <a routerLink="/viewprod/1111111" routerLinkActive="activeRouterLink">playlist_add</a>
+    </mat-icon>
+  </button>
   <button *ngIf="!isAuthenticated" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
     <mat-icon matTooltip="Log in">
       <a routerLink="/login" routerLinkActive="activeRouterLink">login</a>

@@ -23,6 +23,8 @@ import { ConfigService } from './common/app-config.service';
 import { AppConfig } from './common/app-config.model';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { ExtendedEmailValidatorDirective } from './common/extended-email.directive';
+import { ProductViewComponent } from './products/product-view/product-view.component';
+import { ProductEditComponent } from './products/product-edit/product-edit.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { ExtendedEmailValidatorDirective } from './common/extended-email.directi
     LoginComponent,
     WelcomeComponent,
     ProductsCartComponent,
-    ExtendedEmailValidatorDirective
+    ExtendedEmailValidatorDirective,
+    ProductViewComponent,
+    ProductEditComponent
   ],
   imports: [
     BrowserModule,

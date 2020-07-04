@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +29,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/image")
 @Tag(name = "ImageController", description = "Enables image upload")
 public class ImageController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
 
 	private final ImageService imageSvc;
 
@@ -43,6 +47,7 @@ public class ImageController {
 
 	@RequestMapping(value = "/{imgname}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
 	public ResponseEntity<Resource> getImage(@PathVariable String imgname) {
+		logger.info("Get image: {}", imgname);
 		Resource file = imageSvc.loadAsResource(imgname);
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
 				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
@@ -51,6 +56,7 @@ public class ImageController {
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<UploadResponse> uploadImage(@RequestParam("img") MultipartFile img) {
+		logger.info("Upload image: {}", img.getName());
 		imageSvc.store(img);
 		return new ResponseEntity<UploadResponse>(new UploadResponse("success"), HttpStatus.OK);
 	}

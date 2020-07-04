@@ -1,0 +1,21 @@
+<mat-card class="product-view-card">
+  <mat-card-header>
+    <div mat-card-avatar [ngStyle]="{ 'background-image': 'url(' + prodImgSrc + ')', 'background-size': 'cover'}"></div>
+    <mat-card-title>{{ product.productName }}</mat-card-title>
+    <mat-card-subtitle>{{ product.id }}</mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image [src]="prodImgSrc" alt="Photo of {{ product.productName }}">
+  <mat-card-content>
+    <p>
+      {{ product.productDesc }}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <a [routerLink]="['/editprod',product.id]" routerLinkActive="activeRouterLink">
+      <button mat-button>EDIT</button>
+    </a>
+    <a routerLink="/prodscart" routerLinkActive="activeRouterLink">
+      <button mat-button>BACK TO PRODUCTS</button>
+    </a>
+  </mat-card-actions>
+</mat-card>
