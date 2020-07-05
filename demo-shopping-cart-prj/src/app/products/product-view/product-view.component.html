@@ -11,8 +11,11 @@
     </p>
   </mat-card-content>
   <mat-card-actions>
-    <a [routerLink]="['/editprod',product.id]" routerLinkActive="activeRouterLink">
+    <a [routerLink]="['/editprod', product.id]" routerLinkActive="activeRouterLink">
       <button mat-button>EDIT</button>
+    </a>
+    <a [routerLink]="['/deleteprod', product.id]" routerLinkActive="activeRouterLink">
+      <button mat-button>DELETE</button>
     </a>
     <a routerLink="/prodscart" routerLinkActive="activeRouterLink">
       <button mat-button>BACK TO PRODUCTS</button>

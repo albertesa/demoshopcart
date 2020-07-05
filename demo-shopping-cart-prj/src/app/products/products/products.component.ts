@@ -1,7 +1,7 @@
+import { ProductService } from './../../common/product.service';
 import { Component, OnInit } from '@angular/core';
 
 import { Product } from '../product.model';
-import { RepositoryService } from '../../common/repository.service';
 
 @Component({
   selector: 'app-products',
@@ -13,18 +13,21 @@ export class ProductsComponent implements OnInit {
   isDisabled: boolean = true;
   products: Product[] = [];
 
-  constructor(private repo: RepositoryService) { }
+  constructor(
+    private prodSvc: ProductService) { }
 
   ngOnInit(): void {
     this.fetchProducts();
   }
 
   fetchProducts() {
-    console.log('Fetching products');
-    this.repo.fetchProducts().subscribe(prods => {
-      console.log('Fetched products', prods.length);
-      this.products = prods.slice();
-    });
+    this.prodSvc.getProducts()
+      .then(prods => {
+        this.products = prods;
+      })
+      .catch(err => {
+        throw new Error(`Failed to load products: ${JSON.stringify(err)}`);
+      });
   }
 
 }
