@@ -1,7 +1,8 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProductService } from './../../common/product.service';
 import { Component, OnInit } from '@angular/core';
 
 import { Product } from '../product.model';
-import { RepositoryService } from '../../common/repository.service';
 
 @Component({
   selector: 'app-products',
@@ -13,18 +14,29 @@ export class ProductsComponent implements OnInit {
   isDisabled: boolean = true;
   products: Product[] = [];
 
-  constructor(private repo: RepositoryService) { }
+  constructor(
+    private prodSvc: ProductService,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.fetchProducts();
   }
 
-  fetchProducts() {
-    console.log('Fetching products');
-    this.repo.fetchProducts().subscribe(prods => {
-      console.log('Fetched products', prods.length);
-      this.products = prods.slice();
+  openSnackBar(message: string) {
+    this._snackBar.open(message, 'Error loading products', {
+      duration: 10000,
     });
+  }
+
+  fetchProducts() {
+    this.prodSvc.getProducts()
+      .then(prods => {
+        this.products = prods;
+      })
+      .catch(err => {
+        console.error('prods component err', err);
+        this.openSnackBar(`Failed to load products: ${JSON.stringify(err)}`);
+      });
   }
 
 }
