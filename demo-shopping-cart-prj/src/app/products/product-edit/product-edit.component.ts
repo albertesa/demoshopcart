@@ -21,6 +21,7 @@ export class ProductEditComponent implements OnInit {
   title: string = '';
   titleIconName: string = '';
   selectedFile: File;
+  isAddNew: boolean = false;
 
   constructor(
     private router: Router,
@@ -43,6 +44,7 @@ export class ProductEditComponent implements OnInit {
 
   setCurrentProduct(prodId: string) {
     if (prodId === 'new') {
+      this.isAddNew = true;
       this.product = new Product('new', '', '', '');
       this.title = 'Add new product';
       this.titleIconName = 'playlist_add';
@@ -61,6 +63,15 @@ export class ProductEditComponent implements OnInit {
     this._snackBar.open(message, 'Product submission status', {
       duration: 10000,
     });
+  }
+
+  onCancel() {
+    console.log('Edit product cancelled');
+    if (this.isAddNew) {
+      this.router.navigate(['/prodscart']);
+    } else {
+      this.router.navigate(['/viewprod', this.prodId]);
+    }
   }
 
   onSubmit() {

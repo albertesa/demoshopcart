@@ -27,7 +27,9 @@ export class ProductService {
 
   submitProductWithImage(prod: Product, img: File): Promise<Product> {
     const uploadData = new FormData();
-    uploadData.append('img', img);
+    if (img) {
+      uploadData.append('img', img);
+    }
     uploadData.append('id', prod.id);
     uploadData.append('productName', prod.productName);
     uploadData.append('productDesc', prod.productDesc);
@@ -80,28 +82,25 @@ export class ProductService {
   }
 
   deleteProduct(prod: Product): Promise<DeleteResponse> {
-    if (confirm(`Delete product: ${prod.productName} ???`)) {
-      return new Promise<DeleteResponse>((resolve, reject) => {
-        this.repo.deleteProduct(prod.id).subscribe(
-          res => {
-            console.log('Result of product delete', res);
-            let prods: Product[] = this.products.filter(p => p.id !== prod.id);
-            this.products = [ ...prods ];
-            this.subjProdsChanged.next([ ...this.products ]);
-            resolve(res);
-          },
-          err => {
-            reject(err);
-          }
-        );
-      });
-    }
-    return Promise.reject('User canceled product delete request');
+    return new Promise<DeleteResponse>((resolve, reject) => {
+      this.repo.deleteProduct(prod.id).subscribe(
+        res => {
+          console.log('Result of product delete', res);
+          let prods: Product[] = this.products.filter(p => p.id !== prod.id);
+          this.products = [ ...prods ];
+          this.subjProdsChanged.next([ ...this.products ]);
+          resolve(res);
+        },
+        err => {
+          reject(err);
+        }
+      );
+    });
   }
 
   generateImageSrcUrl(prod: Product) {
-    return `assets/images/${prod.productImg}`
-    //return `${this.cfgSvc.getServer()}/image/${prod.productImg}`;
+    //return `assets/images/${prod.productImg}`
+    return `${this.cfgSvc.getServer()}/image/${prod.productImg}`;
   }
 
 }

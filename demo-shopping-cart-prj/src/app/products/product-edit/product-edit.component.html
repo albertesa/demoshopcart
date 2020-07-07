@@ -42,9 +42,15 @@
         </button>
       </div>
 
-      <button mat-raised-button class="resetCartButton"
-        [disabled]="f.invalid || img.value === ''"
-        color="primary" (click)="onSubmit()">Submit</button>
+      <div layout="row" flex="25" fxLayoutGap="10px">
+        <button mat-raised-button class="resetCartButton"
+          color="accent" (click)="onCancel()">CANCEL</button>
+
+        <button mat-raised-button class="resetCartButton"
+          [disabled]="f.invalid || img.value === ''"
+          color="primary" (click)="onSubmit()">SUBMIT</button>
+      </div>
+
     </form>
   </mat-card-content>
 </mat-card>

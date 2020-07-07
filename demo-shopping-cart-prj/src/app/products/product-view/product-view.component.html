@@ -14,7 +14,7 @@
     <a [routerLink]="['/editprod', product.id]" routerLinkActive="activeRouterLink">
       <button mat-button>EDIT</button>
     </a>
-    <a [routerLink]="['/deleteprod', product.id]" routerLinkActive="activeRouterLink">
+    <a style="color: blue;" (click)="onDeleteProduct()">
       <button mat-button>DELETE</button>
     </a>
     <a routerLink="/prodscart" routerLinkActive="activeRouterLink">
