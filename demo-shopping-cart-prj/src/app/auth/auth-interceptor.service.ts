@@ -15,9 +15,12 @@ export class AuthInterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log('Intercepted request', req.url);
-    let hdrs = {
-      'Content-Type': 'application/json',
-    };
+    let hdrs = {};
+    if (req.url.endsWith('/setprodwimg')) {
+      //hdrs['Content-Type'] = 'multipart/form-data';
+    } else {
+      hdrs['Content-Type'] = 'application/json';
+    }
     let xsrfCv = this.cookieSvc.get('SSBA-STOK');
     console.log('Adding xsrf header', xsrfCv);
     if (xsrfCv && xsrfCv.length > 0) {

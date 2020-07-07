@@ -1,6 +1,7 @@
+import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductService } from './../../common/product.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Product } from '../product.model';
 
@@ -9,10 +10,11 @@ import { Product } from '../product.model';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
 
   isDisabled: boolean = true;
   products: Product[] = [];
+  private subscriptionProdsChanged: Subscription;
 
   constructor(
     private prodSvc: ProductService,
@@ -20,10 +22,18 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchProducts();
+    this.subscriptionProdsChanged = this.prodSvc.subjProdsChanged.subscribe(
+        (prods: Product[]) => {
+          this.products = prods;
+        });
   }
 
-  openSnackBar(message: string) {
-    this._snackBar.open(message, 'Error loading products', {
+  ngOnDestroy() {
+    this.subscriptionProdsChanged.unsubscribe();
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
       duration: 10000,
     });
   }
@@ -35,7 +45,9 @@ export class ProductsComponent implements OnInit {
       })
       .catch(err => {
         console.error('prods component err', err);
-        this.openSnackBar(`Failed to load products: ${JSON.stringify(err)}`);
+        this.openSnackBar(
+          `Failed to load products: ${JSON.stringify(err)}`,
+          'Error loading products');
       });
   }
 

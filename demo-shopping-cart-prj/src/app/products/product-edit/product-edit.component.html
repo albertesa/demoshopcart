@@ -9,10 +9,10 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" #f="ngForm" (ngSubmit)="onSubmit()">
+    <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" #f="ngForm">
 
       <mat-form-field>
-        <input type="text" matInput placeholder="Product number" disabled="true"
+        <input type="text" matInput placeholder="Product number *" disabled="true"
           ngModel name="prodId" [(ngModel)]="prodId" required>
       </mat-form-field>
 
@@ -42,9 +42,9 @@
         </button>
       </div>
 
-      <button type="submit" mat-raised-button class="resetCartButton"
+      <button mat-raised-button class="resetCartButton"
         [disabled]="f.invalid || img.value === ''"
-        color="primary">Submit</button>
+        color="primary" (click)="onSubmit()">Submit</button>
     </form>
   </mat-card-content>
 </mat-card>

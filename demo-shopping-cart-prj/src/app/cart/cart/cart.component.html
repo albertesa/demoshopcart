@@ -11,7 +11,7 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <mat-card *ngIf="cart.items.length==0"> The card is empty</mat-card>
+    <mat-card *ngIf="cart.items.length==0"> The cart is empty</mat-card>
     <app-cart-item *ngFor="let cartItem of cart.items" [cartItem]="cartItem"></app-cart-item>
   </mat-card-content>
 </mat-card>

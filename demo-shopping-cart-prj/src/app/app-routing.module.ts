@@ -12,13 +12,13 @@ const routes: Routes = [
   {path: '', component: WelcomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},
-  {path: 'prodscart', component: ProductsCartComponent},
+  {path: 'prodscart', component: ProductsCartComponent, runGuardsAndResolvers: 'always'},
   {path: 'viewprod/:id', component: ProductViewComponent},
   {path: 'editprod/:id', component: ProductEditComponent}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

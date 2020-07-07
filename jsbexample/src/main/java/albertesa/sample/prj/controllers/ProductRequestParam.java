@@ -1,5 +1,7 @@
 package albertesa.sample.prj.controllers;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import albertesa.sample.prj.util.SanitizerUtil;
 
 public class ProductRequestParam {
@@ -8,9 +10,18 @@ public class ProductRequestParam {
 	private String productName;
 	private String productImg;
 	private String productDesc;
+	private MultipartFile img;
 	
 	public ProductRequestParam() {
 		super();
+	}
+
+	public void setImg(MultipartFile img) {
+		this.img = img;
+	}
+
+	public MultipartFile getImg() {
+		return img;
 	}
 
 	public String getId() {

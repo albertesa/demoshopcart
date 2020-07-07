@@ -1,3 +1,4 @@
+import { DeleteResponse } from './delete-response.model';
 import { UpdateResponse } from './update-response.model';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -20,7 +21,21 @@ export class RepositoryService {
     private http: HttpClient,
     private cfgSvc: ConfigService) {
       this.server = this.cfgSvc.getServer();
-    }
+  }
+
+  submitProductWithImage(formData: FormData) {
+    console.log('formData', formData);
+    return this.http
+      .post<Product>(`${this.server}/product/setprodwimg`, formData);
+  }
+
+  deleteProduct(prodId: string) {
+    return this.http
+      .post<DeleteResponse>(`${this.server}/product/${prodId}/deleteprod`, {})
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   resetCart(cartId: string) {
     return this.http

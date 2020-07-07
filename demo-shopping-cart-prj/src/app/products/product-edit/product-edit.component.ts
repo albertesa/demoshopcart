@@ -1,8 +1,10 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductService } from './../../common/product.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 import { Product } from './../product.model';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-product-edit',
@@ -23,7 +25,8 @@ export class ProductEditComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private prodSvc: ProductService) { }
+    private prodSvc: ProductService,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.setCurrentProduct(this.route.snapshot.params['id']);
@@ -33,6 +36,7 @@ export class ProductEditComponent implements OnInit {
   }
 
   onFileChanged(event) {
+    console.log('onFileChanged', event);
     this.selectedFile = event.target.files[0]
     this.prodImg = this.selectedFile.name;
   }
@@ -53,8 +57,27 @@ export class ProductEditComponent implements OnInit {
     this.prodImg = this.product.productImg;
   }
 
-  onSubmit() {
+  openSnackBar(message: string) {
+    this._snackBar.open(message, 'Product submission status', {
+      duration: 10000,
+    });
+  }
 
+  onSubmit() {
+    this.product.productName = this.prodName;
+    this.product.productDesc = this.prodDesc;
+    this.product.productName = this.prodName;
+    this.product.productImg = this.prodImg;
+    console.log('Submitted data', this.product);
+    this.prodSvc.submitProductWithImage(this.product, this.selectedFile)
+      .then(res => {
+        console.log('Product submission response', JSON.stringify(res));
+        this.openSnackBar(`Product submitted successfully`);
+        this.router.navigate(['/viewprod', res.id]);
+      })
+      .catch(err => {
+        this.openSnackBar(JSON.stringify(err));
+      });
   }
 
 }
