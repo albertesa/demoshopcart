@@ -1,6 +1,9 @@
+import { CanDeactivateGuard } from './common/candeactivate-guard.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule, NG_VALIDATORS } from '@angular/forms';
+
+import {MatDialogModule} from '@angular/material/dialog';
 
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -25,6 +28,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { ExtendedEmailValidatorDirective } from './common/extended-email.directive';
 import { ProductViewComponent } from './products/product-view/product-view.component';
 import { ProductEditComponent } from './products/product-edit/product-edit.component';
+import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +43,8 @@ import { ProductEditComponent } from './products/product-edit/product-edit.compo
     ProductsCartComponent,
     ExtendedEmailValidatorDirective,
     ProductViewComponent,
-    ProductEditComponent
+    ProductEditComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -49,9 +54,11 @@ import { ProductEditComponent } from './products/product-edit/product-edit.compo
     BrowserAnimationsModule,
     MaterialModule,
     FlexLayoutModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDialogModule
   ],
   providers: [
+    CanDeactivateGuard,
     {
       provide: APP_INITIALIZER,
       useFactory: initApp,

@@ -1,7 +1,6 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteProductService } from './../../common/delete-product.service';
 import { ProductService } from './../../common/product.service';
 import { ConfigService } from './../../common/app-config.service';
-import { AppConfig } from './../../common/app-config.model';
 import { Component, OnInit, Input } from '@angular/core';
 import { Product } from '../product.model';
 import { CartService } from 'src/app/common/cart.service';
@@ -21,7 +20,7 @@ export class ProductComponent implements OnInit {
     private cfgSvc: ConfigService,
     private router: Router,
     private prodSvc: ProductService,
-    private _snackBar: MatSnackBar) { }
+    private delProdSvc: DeleteProductService) { }
 
   ngOnInit(): void {
   }
@@ -39,21 +38,7 @@ export class ProductComponent implements OnInit {
   }
 
   onDeleteProduct() {
-    this.prodSvc.deleteProduct(this.product)
-      .then(res => {
-        this.openSnackBar(JSON.stringify(res), 'Product deleted');
-        console.log('Reload page ...');
-        this.router.navigate(['/prodscart']);
-      })
-      .catch(err => {
-        this.openSnackBar(JSON.stringify(err), 'Product delete status');
-      });
-  }
-
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, {
-      duration: 10000,
-    });
+    this.delProdSvc.onDeleteProduct(this.product);
   }
 
   generateLink(): string {

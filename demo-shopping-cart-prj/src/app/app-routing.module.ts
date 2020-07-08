@@ -1,3 +1,4 @@
+import { CanDeactivateGuard } from './common/candeactivate-guard.service';
 import { ProductEditComponent } from './products/product-edit/product-edit.component';
 import { ProductsCartComponent } from './products-cart/products-cart/products-cart.component';
 import { SignupComponent } from './auth/signup/signup.component';
@@ -14,7 +15,11 @@ const routes: Routes = [
   {path: 'signup', component: SignupComponent},
   {path: 'prodscart', component: ProductsCartComponent, runGuardsAndResolvers: 'always'},
   {path: 'viewprod/:id', component: ProductViewComponent},
-  {path: 'editprod/:id', component: ProductEditComponent}
+  {
+    path: 'editprod/:id',
+    component: ProductEditComponent,
+    canDeactivate: [CanDeactivateGuard]
+  }
 ];
 
 @NgModule({

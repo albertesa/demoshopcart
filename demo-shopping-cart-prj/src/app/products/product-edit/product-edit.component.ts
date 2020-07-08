@@ -1,6 +1,8 @@
+import { Observable } from 'rxjs';
+import { CanComponentDeactivate } from './../../common/candeactivate-guard.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductService } from './../../common/product.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 import { Product } from './../product.model';
@@ -11,7 +13,7 @@ import { NgForm } from '@angular/forms';
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css']
 })
-export class ProductEditComponent implements OnInit {
+export class ProductEditComponent implements OnInit, CanComponentDeactivate {
 
   product: Product;
   prodId: string;
@@ -35,6 +37,13 @@ export class ProductEditComponent implements OnInit {
       this.setCurrentProduct(params['id']);
     });
   }
+
+  canDeactivate(currRoute: ActivatedRouteSnapshot,
+      currState: RouterStateSnapshot,
+      nextState?: RouterStateSnapshot
+      ): Observable<boolean> | Promise<boolean> | boolean {
+      return confirm('Leave the page ???');
+    }
 
   onFileChanged(event) {
     console.log('onFileChanged', event);

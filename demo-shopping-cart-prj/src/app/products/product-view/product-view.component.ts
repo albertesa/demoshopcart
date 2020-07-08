@@ -1,4 +1,4 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteProductService } from './../../common/delete-product.service';
 import { ProductService } from './../../common/product.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -20,7 +20,7 @@ export class ProductViewComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private prodSvc: ProductService,
-    private _snackBar: MatSnackBar) { }
+    private delProdSvc: DeleteProductService) { }
 
   ngOnInit(): void {
     this.prodId = this.route.snapshot.params['id'];
@@ -28,24 +28,7 @@ export class ProductViewComponent implements OnInit {
     this.prodImgSrc = this.prodSvc.generateImageSrcUrl(this.product);
   }
 
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, {
-      duration: 10000,
-    });
-  }
-
   onDeleteProduct() {
-    if (confirm(`Delete product: ${this.product.productName} ???`)) {
-      this.prodSvc.deleteProduct(this.product)
-      .then(res => {
-        this.openSnackBar(JSON.stringify(res), 'Product deleted');
-        console.log('Navigate away ...');
-        this.router.navigate(['/prodscart']);
-      })
-      .catch(err => {
-        this.openSnackBar(JSON.stringify(err), 'Product delete status');
-      });
-    }
+    this.delProdSvc.onDeleteProduct(this.product);
   }
-
 }
